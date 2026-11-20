@@ -3,8 +3,8 @@
     <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="AndWall Icon" width="72" />
   </a>
   <h1>AndWall</h1>
-  <strong>可选本地 VPN 后端的 Android 防火墙。</strong><br/>
-  隐私优先、纯本地运行，由无需任何配置的内置 VPN 后端驱动——高级模式则使用 Shizuku / 本地 ADB 守护进程 / Root。
+  <strong>Android 防火墙。</strong><br/>
+  基于 VPN / Shizuku / 本地 ADB 守护进程 / Root
 </div>
 
 <p align="center">
@@ -23,10 +23,6 @@
 </p>
 <div style="height: 20px;">&nbsp;</div>
 <p align="center">
-  <a href="https://tooomm.github.io/github-release-stats/?username=hsushjk&repository=AndWall">
-    <img alt="Downloads (GitHub)" src="https://img.shields.io/github/downloads/hsushjk/AndWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
-  </a>
-  <img alt="Repo size" src="https://img.shields.io/github/repo-size/hsushjk/AndWall?style=flat-square" />
   <img alt="Minimum SDK" src="https://img.shields.io/badge/Minimum%20SDK-30%20(Android%2011)-839192?style=flat-square&logo=android&logoColor=white" />
 </p>
 
@@ -35,30 +31,42 @@
   <a href="https://github.com/AhmetCanArslan/ShizuWall">上游项目（ShizuWall）</a>
 </p>
 
-## 兼容环境
+## 为什么会有 AndWall
 
-Android 11 及以上，并需要以下任一后端：
+[ShizuWall](https://github.com/AhmetCanArslan/ShizuWall)是一个非常好的项目，功能强大但不臃肿，UI 设计美观且合理。但它不支持 VPN 模式。
 
-- **VPN**：内置本地 VPN 后端，无需配置，也无需配套应用（仅限当前用户的应用）
-- **Shizuku**（支持分支版本）
-- **LibADB**：通过无线调试配对，无需电脑
-- **Root**
-
-新安装默认使用 **VPN** 后端和 **白名单** 防火墙模式，因此应用开箱即用。其他后端可稍后在 **设置 → 后端与工作模式** 中选择。
+该分支仓库的所有者认为，好的项目应该兼容并蓄。融合 VPN 后端虽然降低了使用门槛，但并不会拉低上限。
 
 ## 为什么选择 AndWall
 
-- **VPN 模式无需特权配置**：只需授权一次系统 VPN 即可——无需 Shizuku、无需 ADB、无需 root。
+- **多模式可选**：可以使用最基础的 VPN 。也可以使用更强大的 Shizuku、ADB、root 模式。
 - **按应用控制**：按应用拦截网络，在链式模式中还包括工作资料和分身副本。
 - **隐私**：离线优先，无分析、无遥测、无远程 VPN 服务器——隧道完全在本地，所有数据包都会被丢弃。
 - **快捷访问**：快速设置磁贴、小部件和悬浮按钮。
 - **自动化**：可通过 adb、Tasker、MacroDroid 等发送的广播进行控制。
 
+## 本分支的主要改动
+
+AndWall 是 [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) 的分支。本分支新增了：
+
+- **VPN 后端**：免配置的防火墙后端，只需确认系统授权对话框即可使用。
+- **VPN 模式的界面适配**：隐藏 VPN 后端无法提供的防火墙模式和功能，并将防火墙模式回退为白名单。
+- **重新品牌化、更新设置项和翻译**，以及为本分支提供更详细的更新日志和更新检查。
+- **移除 隐私政策**：本项目不上架任何应用市场，不处理个人数据，因此不产生产生告知义务。
+
+## 兼容环境
+
+Android 11 及以上，并需要以下任一后端：
+
+- **VPN**
+- **Shizuku**（支持分支版本）
+- **LibADB**：通过无线调试配对，无需电脑
+- **Root**
+
 ## 截图
 
 <p align="center">
   <img src="assets/screenshots/v4.7.1/1.png" alt="AndWall 主界面" width="30%" />
-  <img src="assets/screenshots/v4.7.1/4.png" alt="设置" width="30%" />
 </p>
 
 ## 工作原理
@@ -81,16 +89,6 @@ VPN 后端是一个本地 `VpnService` tun 设备，只捕获你选择要拦截�
 重启后隧道会自动重新启动；如果在防火墙开启期间应用进程被终止，下次打开 AndWall 时会恢复保护。只要设备设置了屏幕锁，就支持锁屏模式（隧道会跟随锁屏状态）。
 
 VPN 后端的限制：它只处理当前用户的应用（不支持工作资料/分身副本），不支持仅移动数据规则和基于前台检测的模式，并且被拦截应用集合的维护不依赖按 UID 的防火墙链。如需这些功能，请继续使用 Shizuku、LibADB 或 Root。
-
-## 本分支的改动
-
-AndWall 是 [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) 的分支。本分支新增了：
-
-- **VPN 后端**：免配置的防火墙后端，只需确认系统授权对话框即可使用。
-- **新用户默认设置**：VPN 后端、白名单防火墙模式，并隐藏无网络权限的应用。
-- **更新的引导流程**：欢迎流程和模式选择现在会提到全部四种后端。
-- **VPN 模式的界面适配**：隐藏 VPN 后端无法提供的防火墙模式和功能，并将防火墙模式回退为白名单。
-- **重新品牌化、更新设置项和翻译**，以及为本分支提供更详细的更新日志和更新检查。
 
 ## 自动化
 
@@ -155,9 +153,13 @@ adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.P
 
 AndWall 按**“原样”**提供，不附带任何保证。它依赖高级系统权限，开发者不对系统不稳定、数据丢失或网络拦截造成的副作用负责。请务必确认你拦截了哪些应用。
 
-本分支仅通过[此 GitHub 仓库](https://github.com/hsushjk/AndWall)分发。其他来源的 APK 与本项目无关，使用风险自负。AndWall 没有官方网站，也未在 Google Play 或 F-Droid 上发布。
+本分支仅通过[此 GitHub 仓库](https://github.com/hsushjk/AndWall)分发。其他来源的 APK 与本项目无关，使用风险自负。AndWall 没有官方网站，也不会在 Google Play 或 F-Droid 上发布。
 
 `INTERNET` 权限仅用于无线调试配对（LibADB）。
+
+## 赞助
+
+如果您觉得该项目帮助到了您，您可以给本仓库和上游各自点一下 Star 。如果要赞助，请到上游仓库单击`Buy me a coffee`
 
 ## 许可证
 
