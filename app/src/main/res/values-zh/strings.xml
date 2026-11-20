@@ -533,7 +533,10 @@
     <string name="app_lock_submit">确认</string>
     <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
     <string name="contact_developer">报告问题</string>
-    <string name="contact_developer_description">在 GitHub 上打开 AndWall 的问题追踪器</string>
+        <string name="contact_developer_description">在 GitHub 上打开 AndWall Issues</string>
+    <string name="report_dialog_message">如果您要提交与 VPN 相关的问题，请继续；如果不是，建议下载 ShizuWall 并尝试复现，若复现成功，建议转到上游仓库报告问题。</string>
+    <string name="report_dialog_continue">继续</string>
+    <string name="report_dialog_upstream">转到上游</string>
     <string name="open_link_failed">没有可用于打开此链接的应用</string>
     <string name="changelog_title">%1$s 更新内容</string>
     <string name="changelog_message">• 新增 VPN 模式</string>

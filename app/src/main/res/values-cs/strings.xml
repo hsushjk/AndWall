@@ -533,7 +533,10 @@
     <string name="app_lock_submit">Potvrdit</string>
     <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
     <string name="contact_developer">Nahlásit problém</string>
-    <string name="contact_developer_description">Otevřít přehled problémů AndWall na GitHubu</string>
+        <string name="contact_developer_description">Otevřít Issues AndWall na GitHubu</string>
+    <string name="report_dialog_message">Pokud hlásíte problém související s VPN, pokračujte. Jinak doporučujeme stáhnout ShizuWall a zkusit problém reprodukovat tam; pokud se to povede, nahlaste jej v původním repozitáři.</string>
+    <string name="report_dialog_continue">Pokračovat</string>
+    <string name="report_dialog_upstream">Přejít na upstream</string>
     <string name="open_link_failed">K otevření tohoto odkazu není dostupná žádná aplikace</string>
     <string name="changelog_title">Novinky ve verzi %1$s</string>
     <string name="changelog_message">• Přidán režim VPN</string>

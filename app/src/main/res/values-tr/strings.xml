@@ -534,7 +534,10 @@
     <string name="app_lock_submit">Onayla</string>
     <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
     <string name="contact_developer">Sorun bildir</string>
-    <string name="contact_developer_description">GitHub üzerindeki AndWall sorun takipçisini aç</string>
+        <string name="contact_developer_description">AndWall sorunlarını GitHub\'da aç</string>
+    <string name="report_dialog_message">VPN ile ilgili bir sorun bildiriyorsanız devam edin. Değilse, ShizuWall\'ı indirip orada yeniden üretmeyi deneyin; yeniden üretilirse sorunu üst kaynak deposunda bildirin.</string>
+    <string name="report_dialog_continue">Devam</string>
+    <string name="report_dialog_upstream">Üst kaynağa git</string>
     <string name="open_link_failed">Bu bağlantıyı açabilecek uygulama yok</string>
     <string name="changelog_title">%1$s sürümündeki yenilikler</string>
     <string name="changelog_message">• VPN modu eklendi</string>

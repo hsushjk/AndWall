@@ -174,17 +174,27 @@ class SettingsActivity : BaseActivity() {
         }
 
         findViewById<LinearLayout>(R.id.btnContactDeveloper).setOnClickListener {
-            val url = getString(R.string.contact_developer_url)
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            try {
-                startActivity(intent)
-            } catch (_: ActivityNotFoundException) {
-                Snackbar.make(
-                    findViewById(R.id.settingsRoot),
-                    getString(R.string.open_link_failed),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+            val openLink: (String) -> Unit = { url ->
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                } catch (_: ActivityNotFoundException) {
+                    Snackbar.make(
+                        findViewById(R.id.settingsRoot),
+                        getString(R.string.open_link_failed),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             }
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.contact_developer)
+                .setMessage(R.string.report_dialog_message)
+                .setPositiveButton(R.string.report_dialog_continue) { _, _ ->
+                    openLink(getString(R.string.contact_developer_url))
+                }
+                .setNegativeButton(R.string.report_dialog_upstream) { _, _ ->
+                    openLink(getString(R.string.github_upstream_url).trimEnd('/') + "/issues")
+                }
+                .show()
         }
 
         val tvVersion = findViewById<TextView>(R.id.tvVersion)

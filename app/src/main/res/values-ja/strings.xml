@@ -533,7 +533,10 @@
     <string name="app_lock_submit">確定</string>
     <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
     <string name="contact_developer">問題を報告</string>
-    <string name="contact_developer_description">GitHub で AndWall のイシュートラッカーを開く</string>
+        <string name="contact_developer_description">GitHub で AndWall の Issues を開く</string>
+    <string name="report_dialog_message">VPN に関連する問題を報告する場合は続行してください。そうでない場合は、ShizuWall をダウンロードして再現を試み、再現する場合は上流リポジトリで報告することをお勧めします。</string>
+    <string name="report_dialog_continue">続行</string>
+    <string name="report_dialog_upstream">上流へ移動</string>
     <string name="open_link_failed">このリンクを開けるアプリがありません</string>
     <string name="changelog_title">%1$s の新機能</string>
     <string name="changelog_message">• VPN モードを追加</string>

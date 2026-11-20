@@ -533,7 +533,10 @@
     <string name="app_lock_submit">Confirm</string>
     <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
     <string name="contact_developer">Report an issue</string>
-    <string name="contact_developer_description">Open the AndWall issue tracker on GitHub</string>
+        <string name="contact_developer_description">Open AndWall Issues on GitHub</string>
+    <string name="report_dialog_message">If you are reporting a VPN-related issue, continue. Otherwise, please download ShizuWall and try to reproduce it there; if it reproduces, report it to the upstream repository.</string>
+    <string name="report_dialog_continue">Continue</string>
+    <string name="report_dialog_upstream">Go to upstream</string>
     <string name="open_link_failed">No app available to open this link</string>
     <string name="changelog_title">What\'s new in %1$s</string>
     <string name="changelog_message">• Added VPN mode</string>
