@@ -120,6 +120,7 @@ class PerUidRoutingExecutor(
         return when (WorkingMode.fromName(prefs.getString(MainActivity.KEY_WORKING_MODE, null))) {
             WorkingMode.ROOT, WorkingMode.LADB -> true
             WorkingMode.SHIZUKU -> PerUidFirewall.shizukuBatchReady()
+            WorkingMode.VPN -> false
         }
     }
 

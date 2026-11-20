@@ -1,5 +1,6 @@
 package com.arslan.shizuwall.ui
 
+import android.app.KeyguardManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -86,6 +87,7 @@ class FirewallSettingsActivity : BaseActivity() {
         initializeViews()
         loadSettings()
         setupListeners()
+        applyVpnModeVisibility()
 
         if (savedInstanceState == null && intent.getBooleanExtra(CoachMarks.EXTRA_TOUR, false)) {
             val modeNames = radioGroupFirewallMode.children.filterIsInstance<RadioButton>().filter { it.isVisible }.joinToString(" · ") { it.text }
@@ -99,9 +101,48 @@ class FirewallSettingsActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        applyVpnModeVisibility()
         val mode = FirewallUtils.firewallMode(sharedPreferences)
         updateFirewallModeUI(mode)
         loadAppVisibilitySettings()
+    }
+
+    private fun isVpnWorkingMode(): Boolean = com.arslan.shizuwall.WorkingMode.fromName(
+        sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, com.arslan.shizuwall.WorkingMode.SHIZUKU.name)
+    ) == com.arslan.shizuwall.WorkingMode.VPN
+
+    private fun applyVpnModeVisibility() {
+        val vpn = isVpnWorkingMode()
+        listOf(
+            R.id.radioModeSmartForeground, R.id.tvSmartForegroundDescription,
+            R.id.radioModeHybrid, R.id.tvHybridModeDescription,
+            R.id.radioModeFocusTracker, R.id.tvFocusTrackerDescription
+        ).forEach { findViewById<View>(it)?.visibility = if (vpn) View.GONE else View.VISIBLE }
+        cardShowOtherProfiles.visibility = if (vpn) View.GONE else View.VISIBLE
+
+        if (!vpn) return
+
+        if (sharedPreferences.getBoolean(MainActivity.KEY_SHOW_OTHER_PROFILES, false)) {
+            sharedPreferences.edit().putBoolean(MainActivity.KEY_SHOW_OTHER_PROFILES, false).apply()
+            switchShowOtherProfiles.isChecked = false
+        }
+
+        val currentMode = FirewallUtils.firewallMode(sharedPreferences)
+        if (currentMode.requiresForegroundDetection()) {
+            sharedPreferences.edit().putString(MainActivity.KEY_FIREWALL_MODE, FirewallMode.WHITELIST.name).apply()
+            setResult(RESULT_OK)
+            checkModeRadio(FirewallMode.WHITELIST)
+            updateFirewallModeUI(FirewallMode.WHITELIST)
+            if (FirewallUtils.loadFirewallEnabled(sharedPreferences)) {
+                setModeBusy(true)
+                CoroutineScope(Dispatchers.IO).launch {
+                    FirewallUtils.toggle(applicationContext, sharedPreferences, true)
+                    withContext(Dispatchers.Main) {
+                        if (!isDestroyed) setModeBusy(false)
+                    }
+                }
+            }
+        }
     }
 
     private fun initializeViews() {
@@ -125,7 +166,7 @@ class FirewallSettingsActivity : BaseActivity() {
     }
 
     private fun showFirewallModeDetailsDialog() {
-        val modes = listOf(
+        val allModes = listOf(
             R.string.firewall_mode_default to R.string.firewall_mode_default_details,
             R.string.firewall_mode_adaptive to R.string.firewall_mode_adaptive_details,
             R.string.firewall_mode_whitelist to R.string.firewall_mode_whitelist_details,
@@ -134,13 +175,25 @@ class FirewallSettingsActivity : BaseActivity() {
             R.string.firewall_mode_hybrid to R.string.firewall_mode_hybrid_details,
             R.string.firewall_mode_focus_tracker to R.string.firewall_mode_focus_tracker_details
         )
+        val vpn = isVpnWorkingMode()
+        val modes = if (vpn) {
+            allModes.filterNot {
+                it.first == R.string.firewall_mode_smart_foreground ||
+                    it.first == R.string.firewall_mode_hybrid ||
+                    it.first == R.string.firewall_mode_focus_tracker
+            }
+        } else {
+            allModes
+        }
 
         val html = buildString {
             modes.forEach { (titleRes, detailsRes) ->
                 append("<b>").append(getString(titleRes)).append("</b><br>")
                 append(getString(detailsRes)).append("<br><br>")
             }
-            append("<i>").append(getString(R.string.firewall_mode_details_foreground_note)).append("</i>")
+            if (!vpn) {
+                append("<i>").append(getString(R.string.firewall_mode_details_foreground_note)).append("</i>")
+            }
         }
 
         MaterialAlertDialogBuilder(this)
@@ -303,6 +356,19 @@ class FirewallSettingsActivity : BaseActivity() {
             val newMode = modeRadios[checkedId] ?: return@setOnCheckedChangeListener
             val oldMode = FirewallUtils.firewallMode(sharedPreferences)
             val enabled = FirewallUtils.loadFirewallEnabled(sharedPreferences)
+            val workingMode = com.arslan.shizuwall.WorkingMode.fromName(
+                sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, com.arslan.shizuwall.WorkingMode.SHIZUKU.name)
+            )
+            if (workingMode == com.arslan.shizuwall.WorkingMode.VPN && newMode.requiresForegroundDetection()) {
+                Toast.makeText(this, R.string.vpn_mode_requires_static_app_list, Toast.LENGTH_LONG).show()
+                checkModeRadio(oldMode)
+                return@setOnCheckedChangeListener
+            }
+            if (newMode == FirewallMode.SCREEN_LOCK_MODE &&
+                getSystemService(KeyguardManager::class.java)?.isDeviceSecure != true
+            ) {
+                Toast.makeText(this, R.string.screen_lock_no_secure_lock_warning, Toast.LENGTH_LONG).show()
+            }
             val locked = enabled && !FirewallTargets.canSwitchWhileEnabled(newMode, FirewallUtils.loadSelectedApps(this, sharedPreferences).isNotEmpty())
             if (locked) Toast.makeText(this, R.string.no_apps_selected, Toast.LENGTH_LONG).show()
             if (locked || (enabled && !FirewallUtils.checkBackendReady(this))) {

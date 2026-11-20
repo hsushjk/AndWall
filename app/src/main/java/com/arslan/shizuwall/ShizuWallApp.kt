@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.UserManager
 import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
@@ -26,7 +27,18 @@ class ShizuWallApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AppCompatDelegate.setDefaultNightMode(getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE).getInt(MainActivity.KEY_NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM))
+        // Credential protected prefs are not readable before first unlock, and direct boot starts this process.
+        val nightMode = runCatching {
+            val userManager = getSystemService(UserManager::class.java)
+            if (userManager != null && !userManager.isUserUnlocked) {
+                Log.d(TAG, "User is still locked, using default night mode")
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            } else {
+                getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE)
+                    .getInt(MainActivity.KEY_NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+        }.getOrDefault(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(nightMode)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityStarted(activity: Activity) { startedActivities++ }
             override fun onActivityStopped(activity: Activity) { startedActivities-- }
@@ -38,12 +50,17 @@ class ShizuWallApp : Application() {
         })
         registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                val pkg = intent.data?.schemeSpecificPart ?: return
-                val returned = when (intent.action) {
-                    Intent.ACTION_PACKAGE_CHANGED -> intent.getStringArrayExtra(Intent.EXTRA_CHANGED_COMPONENT_NAME_LIST)?.contains(pkg) == true
-                    else -> !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)
-                }
-                if (returned) FirewallUtils.reapply(context, getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE), pkg)
+                // Direct boot may start the receiver before the user unlocks.
+                val userManager = getSystemService(UserManager::class.java)
+                if (userManager != null && !userManager.isUserUnlocked) return
+                runCatching {
+                    val pkg = intent.data?.schemeSpecificPart ?: return
+                    val returned = when (intent.action) {
+                        Intent.ACTION_PACKAGE_CHANGED -> intent.getStringArrayExtra(Intent.EXTRA_CHANGED_COMPONENT_NAME_LIST)?.contains(pkg) == true
+                        else -> !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)
+                    }
+                    if (returned) FirewallUtils.reapply(context, getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE), pkg)
+                }.onFailure { Log.w(TAG, "Package change handling failed", it) }
             }
         }, IntentFilter(Intent.ACTION_PACKAGE_ADDED).apply {
             addAction(Intent.ACTION_PACKAGE_CHANGED)

@@ -1,10 +1,10 @@
 <div align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.arslan.shizuwall">
-    <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="ShizuWall Icon" width="72" />
+  <a href="https://github.com/hsushjk/AndWall">
+    <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="AndWall Icon" width="72" />
   </a>
-  <h1>ShizuWall</h1>
-  <strong>Android firewall without VPN.</strong><br/>
-  Privacy-first, local-only, powered by Shizuku / local ADB daemon / Root.
+  <h1>AndWall</h1>
+  <strong>Android firewall with an optional local VPN backend.</strong><br/>
+  Privacy-first, local-only, powered by a built-in VPN backend that needs no setup — or by Shizuku / local ADB daemon / Root for the advanced modes.
 </div>
 
 <p align="center">
@@ -22,54 +22,47 @@
 </p>
 <div style="height: 20px;">&nbsp;</div>
 <p align="center">
-  <a href="https://tooomm.github.io/github-release-stats/?username=AhmetCanArslan&repository=ShizuWall">
-    <img alt="Downloads (GitHub)" src="https://img.shields.io/github/downloads/AhmetCanArslan/ShizuWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
+  <a href="https://tooomm.github.io/github-release-stats/?username=hsushjk&repository=AndWall">
+    <img alt="Downloads (GitHub)" src="https://img.shields.io/github/downloads/hsushjk/AndWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
   </a>
-  <img alt="Repo size" src="https://img.shields.io/github/repo-size/AhmetCanArslan/ShizuWall?style=flat-square" />
+  <img alt="Repo size" src="https://img.shields.io/github/repo-size/hsushjk/AndWall?style=flat-square" />
   <img alt="Minimum SDK" src="https://img.shields.io/badge/Minimum%20SDK-30%20(Android%2011)-839192?style=flat-square&logo=android&logoColor=white" />
 </p>
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.arslan.shizuwall">
-    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="250" />
-  </a>
-  <a href="https://f-droid.org/packages/com.arslan.shizuwall/">
-    <img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="250" />
-  </a>
+  <a href="https://github.com/hsushjk/AndWall/issues">Questions &amp; issues</a> ·
+  <a href="https://github.com/AhmetCanArslan/ShizuWall">Upstream project (ShizuWall)</a>
 </p>
-
-<p align="center">
-  <a href="https://www.buymeacoffee.com/ahmetcanarslan">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="220" />
-  </a>
-</p>
-
 
 ## Works with
 
 Android 11+ and one of these backends:
 
+- **VPN**: built-in local VPN backend, no setup and no companion app needed (current user's apps only)
 - **Shizuku** (forks are supported)
 - **LibADB**: pairs over Wireless Debugging, no computer needed
 - **Root**
 
-## Why ShizuWall
+New installs start with the **VPN** backend and **Whitelist** firewall mode, so the app works out of the box. The other backends can be selected later in **Settings → Backend & working mode**.
 
-- **No VPN**: no packet interception, no persistent tunnel.
-- **Per-app control**: blocks networking per app, including work-profile and clone copies.
-- **Private**: offline-first, no analytics, no telemetry.
+## Why AndWall
+
+- **No privileged setup in VPN mode**: just grant the system VPN consent once — no Shizuku, no ADB, no root.
+- **Per-app control**: blocks networking per app, including work-profile and clone copies in chain-3 modes.
+- **Private**: offline-first, no analytics, no telemetry, no remote VPN server — the tunnel is local and all packets are dropped.
 - **Quick access**: Quick Settings tile, widget and floating button.
 - **Automation**: controllable through broadcasts from adb, Tasker, MacroDroid and similar.
 
 ## Screenshot
 
 <p align="center">
-  <img src="assets/screenshots/v4.7/1.png" alt="ShizuWall main screen" width="30%" />
+  <img src="assets/screenshots/v4.7.1/1.png" alt="AndWall main screen" width="30%" />
+  <img src="assets/screenshots/v4.7.1/4.png" alt="AndWall settings" width="30%" />
 </p>
 
 ## How It Works
 
-ShizuWall drives Android's connectivity **chain 3**, a platform mechanism that controls network access per package:
+Only the Shizuku, LibADB and Root backends need a privileged companion. They drive Android's connectivity **chain 3**, a platform mechanism that controls network access per package:
 
 ```bash
 cmd connectivity set-chain3-enabled true                                # firewall on
@@ -79,6 +72,24 @@ cmd connectivity set-chain3-enabled false                               # firewa
 ```
 
 Android clears these rules on reboot.
+
+### VPN backend
+
+The VPN backend is a local `VpnService` tun device that captures only the apps you choose to block and drops every packet it receives. It requires a single system consent dialog and no other setup. It is the default for new installs, paired with **Whitelist** firewall mode (pick the apps that are allowed, everything else is blocked), and can be changed in **Settings → Backend & working mode**.
+
+The tunnel is started again automatically after a reboot, and if the app process is stopped while the firewall is on, protection is restored the next time AndWall is opened. Screen Lock mode is supported (the tunnel follows the lock state) as long as the device has a screen lock.
+
+Limitations of the VPN backend: it only handles apps of the current user (no work-profile/clone copies), mobile-data-only rules and foreground-detection-based modes are not available, and the blocked-app set is maintained without per-uid firewall chains. For those features keep using Shizuku, LibADB or Root.
+
+## Changes in this fork
+
+AndWall is a fork of [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall). This fork adds:
+
+- **VPN backend**: a setup-free firewall backend that works right after the system consent dialog.
+- **New-user defaults**: VPN backend, Whitelist firewall mode and hiding apps without network access.
+- **Updated onboarding**: welcome flow and mode selection now mention all four backends.
+- **UI adaptation for VPN mode**: firewall modes and features that the VPN backend cannot provide are hidden, and the firewall mode falls back to Whitelist.
+- **Rebranding, updated settings entries and translations**, plus larger changelogs and update checks for this fork.
 
 ## Automation
 
@@ -101,9 +112,11 @@ adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.F
 
 With `apps`, the selection in the app follows: `state true` selects the apps and turns the firewall on if it was off, `state false` unselects them and leaves the firewall on. In whitelist mode `apps` addresses the allow list, so the two states are reversed.
 
+In VPN mode, broadcasts work the same way, but `apps` should reference apps of the current user only; work-profile keys are skipped.
+
 ### New app: `shizuwall.APP_INSTALLED`
 
-Reports a newly installed app, so the new-app policy and notification apply to it as if ShizuWall had detected the install itself. ShizuWall only sees installs in its own profile, so this is how to cover the others.
+Reports a newly installed app, so the new-app policy and notification apply to it as if AndWall had detected the install itself. AndWall only sees installs in its own profile, so this is how to cover the others.
 
 ```bash
 adb shell am broadcast -a shizuwall.APP_INSTALLED -n com.arslan.shizuwall/.receivers.AppInstalledReceiver --es apps "com.example.newapp"
@@ -127,11 +140,21 @@ One of `profile` or `profile_id` is required. If neither matches, nothing change
 adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.ProfileControlReceiver --es profile "Work"
 ```
 
+## Build from source
+
+The project builds with the Gradle wrapper and the Android SDK:
+
+```bash
+./gradlew assembleDebug
+```
+
+The debug build uses the suffix `.debug` and can be installed alongside the release build. The release build requires a signing config of your own.
+
 ## Disclaimer
 
-ShizuWall is provided **"as is"**, without warranty. It relies on advanced system permissions, and the developer is not responsible for system instability, data loss or side effects of blocked networking. Always verify which apps you block.
+AndWall is provided **"as is"**, without warranty. It relies on advanced system permissions, and the developer is not responsible for system instability, data loss or side effects of blocked networking. Always verify which apps you block.
 
-**Official sources are Google Play, F-Droid and this repository only.** APKs from anywhere else are unaffiliated and used at your own risk. ShizuWall has no official website.
+This fork is distributed only through [this GitHub repository](https://github.com/hsushjk/AndWall). APKs from anywhere else are unaffiliated and used at your own risk. AndWall has no official website and is not published on Google Play or F-Droid.
 
 `INTERNET` is requested only for wireless debugging pairing (LibADB).
 
@@ -141,6 +164,7 @@ ShizuWall is provided **"as is"**, without warranty. It relies on advanced syste
 
 ## Credits
 
+- [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall): the upstream project this fork is based on.
 - [Shizuku](https://github.com/RikkaApps/Shizuku): privileged command execution.
 - [LibADB](https://github.com/MuntashirAkon/libadb-android): wireless debugging and daemon connection.
-- [Exodus Privacy](https://exodus-privacy.eu.org/): tracker signature database. ShizuWall bundles a trimmed copy and never contacts their API.
+- [Exodus Privacy](https://exodus-privacy.eu.org/): tracker signature database. AndWall bundles a trimmed copy and never contacts their API.

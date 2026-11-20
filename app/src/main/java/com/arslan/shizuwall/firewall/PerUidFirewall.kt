@@ -70,6 +70,10 @@ object PerUidFirewall {
                 WorkingMode.SHIZUKU -> ShizukuUserServiceManager.obtain()?.setFirewallChainEnabled(enabled)
                 WorkingMode.LADB -> PersistentDaemonManager(context).executeCommand(command)
                 WorkingMode.ROOT -> RootUidFirewallSession.execute(extractHelperDex(context).absolutePath, command)
+                WorkingMode.VPN -> {
+                    VpnFirewallController.setArmed(context, enabled)
+                    "OK"
+                }
             }
         }.onFailure { Log.w(TAG, "Chain fallback failed", it) }.getOrNull()?.trim() == "OK"
     }
@@ -121,6 +125,9 @@ object PerUidFirewall {
             WorkingMode.SHIZUKU -> applyViaShizuku(batch)
             WorkingMode.LADB -> applyViaDaemon(context, batch)
             WorkingMode.ROOT -> applyViaRoot(context, batch)
+            WorkingMode.VPN -> batch.map {
+                RuleOutcome(false, "Per-uid rules are not used by the VPN backend")
+            }
         }
     }
 

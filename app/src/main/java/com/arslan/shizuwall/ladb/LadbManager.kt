@@ -100,7 +100,7 @@ class LadbManager private constructor(private val context: Context) {
         }
 
         val log = buildString {
-            appendLine("ShizuWall LADB error")
+            appendLine("AndWall LADB error")
             appendLine("operation=$operation")
             appendLine("host=${host ?: "(null)"}")
             appendLine("port=${port?.toString() ?: "(null)"}")
@@ -235,7 +235,7 @@ class LadbManager private constructor(private val context: Context) {
     private fun createSelfSignedCertificate(privateKey: PrivateKey, publicKey: PublicKey): X509Certificate {
         val now = Date()
         val until = Date(now.time + TimeUnit.DAYS.toMillis(3650))
-        val subject = X500Name("CN=ShizuWall")
+        val subject = X500Name("CN=AndWall")
         val serial = BigInteger.valueOf(now.time.coerceAtLeast(1L))
 
         val builder: X509v3CertificateBuilder = JcaX509v3CertificateBuilder(
@@ -281,7 +281,7 @@ class LadbManager private constructor(private val context: Context) {
                 code.toByteArray(Charsets.UTF_8),
                 privateKey,
                 certificate,
-                "ShizuWall"
+                "AndWall"
             )
             ctx.use { it.start() }
 

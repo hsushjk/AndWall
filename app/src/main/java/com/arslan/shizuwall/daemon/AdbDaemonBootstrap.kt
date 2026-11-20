@@ -45,7 +45,7 @@ class AdbDaemonBootstrap(private val context: Context) {
         fi
 
         if [ ! -s "${'$'}DEX_SRC" ]; then
-            echo "ERROR: ${'$'}DEX_SRC not found. Open ShizuWall LADB setup once, then retry."
+            echo "ERROR: ${'$'}DEX_SRC not found. Open AndWall LADB setup once, then retry."
             exit 1
         fi
 
@@ -74,10 +74,10 @@ class AdbDaemonBootstrap(private val context: Context) {
         sleep 2
 
         if [ -d "/proc/${'$'}PID" ]; then
-            echo "ShizuWall daemon started (pid ${'$'}PID). You can close this shell."
+            echo "AndWall daemon started (pid ${'$'}PID). You can close this shell."
             exit 0
         else
-            echo "ShizuWall daemon failed to start:"
+            echo "AndWall daemon failed to start:"
             cat "${'$'}LOG_FILE"
             exit 1
         fi

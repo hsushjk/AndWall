@@ -25,6 +25,7 @@ import com.arslan.shizuwall.R
 import com.arslan.shizuwall.ladb.LadbManager
 import com.arslan.shizuwall.security.AppLock
 import com.arslan.shizuwall.firewall.PerUidFirewall
+import com.arslan.shizuwall.firewall.VpnFirewallController
 import com.arslan.shizuwall.services.AppMonitorService
 import com.arslan.shizuwall.services.FloatingButtonService
 import com.arslan.shizuwall.services.ForegroundDetectionService
@@ -127,8 +128,8 @@ class SettingsActivity : BaseActivity() {
             startActivity(Intent(this, SecuritySettingsActivity::class.java))
         }
 
-        findViewById<LinearLayout>(R.id.btnDonate).setOnClickListener {
-            val url = getString(R.string.buymeacoffee_url)
+        findViewById<LinearLayout>(R.id.btnGithubUpstream).setOnClickListener {
+            val url = getString(R.string.github_upstream_url)
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         }
 
@@ -154,9 +155,17 @@ class SettingsActivity : BaseActivity() {
         findViewById<View>(R.id.btnCheckUpdate).setOnClickListener { button ->
             button.isEnabled = false
             lifecycleScope.launch {
-                val release = withContext(Dispatchers.IO) { runCatching { UpdateChecker.fetchLatest() }.getOrNull() }
+                val result = withContext(Dispatchers.IO) {
+                    runCatching { UpdateChecker.check() }.getOrElse {
+                        UpdateChecker.CheckResult(UpdateChecker.Status.FAILED)
+                    }
+                }
+                val release = result.release
                 when {
-                    release == null -> Toast.makeText(this@SettingsActivity, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                    release == null && result.status == UpdateChecker.Status.NO_RELEASE ->
+                        Toast.makeText(this@SettingsActivity, R.string.update_no_releases, Toast.LENGTH_SHORT).show()
+                    release == null ->
+                        Toast.makeText(this@SettingsActivity, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
                     UpdateChecker.isNewer(release.tag, com.arslan.shizuwall.BuildConfig.VERSION_NAME) -> UpdateChecker.showDialog(this@SettingsActivity, release)
                     else -> Toast.makeText(this@SettingsActivity, R.string.update_up_to_date, Toast.LENGTH_SHORT).show()
                 }
@@ -165,19 +174,14 @@ class SettingsActivity : BaseActivity() {
         }
 
         findViewById<LinearLayout>(R.id.btnContactDeveloper).setOnClickListener {
-            val address = getString(R.string.contact_developer_email)
-            val subject = getString(R.string.contact_developer_subject)
-            val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:$address?subject=" + Uri.encode(subject))
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(address))
-                putExtra(Intent.EXTRA_SUBJECT, subject)
-            }
+            val url = getString(R.string.contact_developer_url)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             try {
                 startActivity(intent)
             } catch (_: ActivityNotFoundException) {
                 Snackbar.make(
                     findViewById(R.id.settingsRoot),
-                    getString(R.string.contact_developer_no_app),
+                    getString(R.string.open_link_failed),
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
@@ -274,6 +278,7 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun stopResetSensitiveComponents() {
+        try { VpnFirewallController.disable(this) } catch (_: Exception) {}
         try { stopService(Intent(this, AppMonitorService::class.java)) } catch (_: Exception) {}
         try { stopService(Intent(this, ForegroundDetectionService::class.java)) } catch (_: Exception) {}
         try { FloatingButtonService.stop(this) } catch (_: Exception) {}
@@ -299,6 +304,7 @@ class SettingsActivity : BaseActivity() {
                     }
                 }
                 "ROOT" -> RootShellExecutor.hasRootAccess()
+                "VPN" -> true
                 else -> {
                     val dm = com.arslan.shizuwall.daemon.PersistentDaemonManager(this)
                     dm.isDaemonRunning() || LadbManager.getInstance(this).isConnected()

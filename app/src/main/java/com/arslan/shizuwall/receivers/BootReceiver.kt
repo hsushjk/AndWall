@@ -26,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.arslan.shizuwall.firewall.FirewallCommands
+import com.arslan.shizuwall.firewall.VpnFirewallController
 
 class BootReceiver : BroadcastReceiver() {
 
@@ -104,6 +105,23 @@ class BootReceiver : BroadcastReceiver() {
         val shouldAttemptRootReapply =
             workingMode == WorkingMode.ROOT &&
                 rootReapplyEnabled
+
+        if (workingMode == WorkingMode.VPN) {
+            val activePackages = loadActivePackages(context, dpPrefs, normalPrefs, context.packageName)
+            val restored = restoreVpnFirewall(context, activePackages.toSet())
+            if (restored) {
+                val elapsed = SystemClock.elapsedRealtime()
+                updateFirewallStateAfterReapply(dpPrefs, elapsed)
+                updateFirewallStateAfterReapply(normalPrefs, elapsed)
+                Log.d(TAG, "Successfully re-applied firewall rules after reboot via VPN")
+                return
+            }
+            Log.w(TAG, "VPN re-apply failed, clearing persisted firewall state")
+            clearFirewallState(dpPrefs)
+            clearFirewallState(normalPrefs)
+            postBootNotification(context, R.string.firewall_reboot_message)
+            return
+        }
 
         if (shouldAttemptRootReapply) {
             val activePackages = loadActivePackages(context, dpPrefs, normalPrefs, context.packageName)
@@ -240,6 +258,12 @@ class BootReceiver : BroadcastReceiver() {
         return true
     }
 
+    private fun restoreVpnFirewall(context: Context, activePackages: Set<String>): Boolean {
+        if (activePackages.isEmpty()) return false
+        if (!VpnFirewallController.hasConsent(context)) return false
+        return VpnFirewallController.apply(context, activePackages)
+    }
+
     private fun updateFirewallStateAfterReapply(prefs: SharedPreferences?, elapsed: Long) {
         prefs ?: return
         prefs.edit()
@@ -297,7 +321,7 @@ class BootReceiver : BroadcastReceiver() {
         if (nm.getNotificationChannel(CHANNEL_ID) == null) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "ShizuWall boot notifications",
+                "AndWall boot notifications",
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 description = "Notifications about firewall status after device reboot"

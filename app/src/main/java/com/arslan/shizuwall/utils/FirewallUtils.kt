@@ -12,6 +12,7 @@ import com.arslan.shizuwall.daemon.PersistentDaemonManager
 import com.arslan.shizuwall.firewall.FirewallCommands
 import com.arslan.shizuwall.firewall.FirewallTargets
 import com.arslan.shizuwall.firewall.PerUidFirewall
+import com.arslan.shizuwall.firewall.VpnFirewallController
 import com.arslan.shizuwall.ladb.LadbLogStore
 import com.arslan.shizuwall.profiles.ProfileTileSlots
 import com.arslan.shizuwall.receivers.FirewallControlReceiver
@@ -330,6 +331,7 @@ object FirewallUtils {
         val error = when (mode) {
             "ROOT" -> if (RootShellExecutor.hasRootAccess()) 0 else R.string.root_not_found_message
             "LADB" -> if (PersistentDaemonManager(context).isDaemonRunning()) 0 else R.string.daemon_not_running
+            "VPN" -> if (VpnFirewallController.hasConsent(context)) 0 else R.string.vpn_permission_required
             else -> when {
                 !runCatching { Shizuku.pingBinder() }.getOrDefault(false) -> R.string.shizuku_not_running
                 runCatching { Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED }.getOrDefault(false) -> 0

@@ -38,6 +38,7 @@ object ForegroundTaskProbe {
                     PerUidFirewall.extractHelperDex(context).absolutePath,
                     COMMAND
                 )
+                WorkingMode.VPN -> null
             }
         } catch (t: Throwable) {
             Log.d(TAG, "Foreground task query failed", t)

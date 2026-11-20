@@ -13,6 +13,7 @@ object ShellExecutorProvider {
         val executor = when (WorkingMode.fromName(modeName)) {
             WorkingMode.LADB -> DaemonShellExecutor(context)
             WorkingMode.ROOT -> RootShellExecutor()
+            WorkingMode.VPN -> return VpnShellExecutor(context)
             else -> ShizukuShellExecutor()
         }
         return PerUidRoutingExecutor(context, executor)

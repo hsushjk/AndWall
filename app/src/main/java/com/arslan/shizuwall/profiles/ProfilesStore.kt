@@ -3,6 +3,7 @@ package com.arslan.shizuwall.profiles
 import android.content.Context
 import android.content.SharedPreferences
 import com.arslan.shizuwall.FirewallMode
+import com.arslan.shizuwall.WorkingMode
 import com.arslan.shizuwall.firewall.FirewallTargets
 import com.arslan.shizuwall.firewall.PerUidFirewall
 import com.arslan.shizuwall.model.Profile
@@ -143,15 +144,32 @@ object ProfilesStore {
             PerUidFirewall.isBlockableKey(context, it)
         }
         if (packages != profile.packages) update(context, profile.copy(packages = packages))
+        val resolvedMode = resolveFirewallModeForBackend(context, profile.firewallMode)
         prefs(context).edit().apply {
             putStringSet(MainActivity.KEY_SELECTED_APPS, packages)
             putInt(MainActivity.KEY_SELECTED_COUNT, packages.size)
-            putString(MainActivity.KEY_FIREWALL_MODE, profile.firewallMode)
+            putString(MainActivity.KEY_FIREWALL_MODE, resolvedMode)
             putString(MainActivity.KEY_APP_MODES, profile.appModesJson)
             putBoolean(MainActivity.KEY_SHOW_SYSTEM_APPS, profile.showSystemApps)
             putString(MainActivity.KEY_ACTIVE_PROFILE_ID, profile.id)
-            if (profile.firewallMode != FirewallMode.DEFAULT.name) putBoolean(MainActivity.KEY_SKIP_ENABLE_CONFIRM, true)
+            if (resolvedMode != FirewallMode.DEFAULT.name) putBoolean(MainActivity.KEY_SKIP_ENABLE_CONFIRM, true)
             apply()
+        }
+    }
+
+    /**
+     * A saved profile may contain a foreground-detection firewall mode, but the VPN backend
+     * cannot run those. Fall back to whitelist so the profile keeps working after a backend switch.
+     */
+    private fun resolveFirewallModeForBackend(context: Context, modeName: String): String {
+        val workingMode = WorkingMode.fromName(
+            prefs(context).getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name)
+        )
+        if (workingMode != WorkingMode.VPN) return modeName
+        return if (FirewallMode.fromName(modeName).requiresForegroundDetection()) {
+            FirewallMode.WHITELIST.name
+        } else {
+            modeName
         }
     }
 

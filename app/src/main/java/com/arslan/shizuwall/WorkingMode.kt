@@ -3,7 +3,8 @@ package com.arslan.shizuwall
 enum class WorkingMode {
     SHIZUKU,
     LADB,
-    ROOT;
+    ROOT,
+    VPN;
 
     companion object {
         fun fromName(name: String?): WorkingMode {

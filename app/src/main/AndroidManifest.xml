@@ -239,6 +239,21 @@
             android:exported="false"
             android:foregroundServiceType="specialUse" />
 
+        <!-- VPN backend: captures only the blocked apps and drops their traffic -->
+        <service
+            android:name=".services.VpnFirewallService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:foregroundServiceType="specialUse">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="vpn_firewall" />
+        </service>
+
         <receiver
             android:name=".widgets.FirewallWidgetProvider"
             android:exported="true"

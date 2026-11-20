@@ -1,10 +1,10 @@
 <div align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.arslan.shizuwall">
-    <img src="../app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="ShizuWall Icon" width="72" />
+  <a href="https://github.com/hsushjk/AndWall">
+    <img src="../app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="AndWall Icon" width="72" />
   </a>
-  <h1>ShizuWall</h1>
-  <strong>Файрвол для Android без VPN.</strong><br/>
-  Приватность прежде всего, только локально, работает через Shizuku / локальный ADB-демон / root.
+  <h1>AndWall</h1>
+  <strong>Брандмауэр для Android с необязательным локальным VPN-бэкендом.</strong><br/>
+  Приватность прежде всего, только локально: работа через встроенный VPN-бэкенд, не требующий настройки, или через Shizuku / локальный ADB-демон / Root для продвинутых режимов.
 </div>
 
 <p align="center">
@@ -22,89 +22,101 @@
 </p>
 <div style="height: 20px;">&nbsp;</div>
 <p align="center">
-  <a href="https://tooomm.github.io/github-release-stats/?username=AhmetCanArslan&repository=ShizuWall">
-    <img alt="Downloads (GitHub)" src="https://img.shields.io/github/downloads/AhmetCanArslan/ShizuWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
+  <a href="https://tooomm.github.io/github-release-stats/?username=hsushjk&repository=AndWall">
+    <img alt="Downloads (GitHub)" src="https://img.shields.io/github/downloads/hsushjk/AndWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
   </a>
-  <img alt="Repo size" src="https://img.shields.io/github/repo-size/AhmetCanArslan/ShizuWall?style=flat-square" />
+  <img alt="Repo size" src="https://img.shields.io/github/repo-size/hsushjk/AndWall?style=flat-square" />
   <img alt="Minimum SDK" src="https://img.shields.io/badge/Minimum%20SDK-30%20(Android%2011)-839192?style=flat-square&logo=android&logoColor=white" />
 </p>
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.arslan.shizuwall">
-    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="250" />
-  </a>
-  <a href="https://f-droid.org/packages/com.arslan.shizuwall/">
-    <img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="250" />
-  </a>
+  <a href="https://github.com/hsushjk/AndWall/issues">Вопросы и проблемы</a> ·
+  <a href="https://github.com/AhmetCanArslan/ShizuWall">Исходный проект (ShizuWall)</a>
 </p>
-
-<p align="center">
-  <a href="https://www.buymeacoffee.com/ahmetcanarslan">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="220" />
-  </a>
-</p>
-
 
 ## Работает с
 
 Android 11+ и один из этих бэкендов:
 
+- **VPN**: встроенный локальный VPN-бэкенд, не требует настройки и дополнительного приложения (только приложения текущего пользователя)
 - **Shizuku** (форки поддерживаются)
 - **LibADB**: сопряжение по беспроводной отладке, компьютер не нужен
 - **Root**
 
-## Почему ShizuWall
+Новые установки начинают с бэкенда **VPN** и режима брандмауэра **Белый список**, поэтому приложение работает сразу после установки. Другие бэкенды можно выбрать позже в **Настройки → Бэкенд и рабочий режим**.
 
-- **Без VPN**: никакого перехвата пакетов и постоянного туннеля.
-- **Управление по приложениям**: блокирует сеть для каждого приложения, включая копии в рабочем профиле и клоны.
-- **Приватность**: работает офлайн, без аналитики и телеметрии.
+## Почему AndWall
+
+- **Без привилегированной настройки в режиме VPN**: достаточно один раз предоставить системное разрешение на VPN — никаких Shizuku, ADB и root.
+- **Управление по приложениям**: блокирует сеть для каждого приложения, включая копии в рабочем профиле и клоны в режимах chain 3.
+- **Приватность**: работает офлайн, без аналитики, без телеметрии и без удалённого VPN-сервера — туннель локальный, а все пакеты отбрасываются.
 - **Быстрый доступ**: плитка быстрых настроек, виджет и плавающая кнопка.
 - **Автоматизация**: управление через broadcast-команды из adb, Tasker, MacroDroid и подобных.
 
 ## Скриншот
 
 <p align="center">
-  <img src="../assets/screenshots/v4.6/1.png" alt="ShizuWall" width="30%" />
+  <img src="../assets/screenshots/v4.7.1/1.png" alt="Главный экран AndWall" width="30%" />
+  <img src="../assets/screenshots/v4.7.1/4.png" alt="Настройки" width="30%" />
 </p>
 
 ## Как это работает
 
-ShizuWall управляет **chain 3** службы connectivity в Android — механизмом платформы, который контролирует доступ к сети для каждого пакета:
+Только бэкендам Shizuku, LibADB и Root нужен привилегированный компаньон. Они управляют **chain 3** службы connectivity в Android — механизмом платформы, который контролирует доступ к сети для каждого пакета:
 
 ```bash
-cmd connectivity set-chain3-enabled true                                # файрвол включён
+cmd connectivity set-chain3-enabled true                                # брандмауэр включён
 cmd connectivity set-package-networking-enabled false <package.name>   # заблокировать
 cmd connectivity set-package-networking-enabled true <package.name>    # разблокировать
-cmd connectivity set-chain3-enabled false                               # файрвол выключен
+cmd connectivity set-chain3-enabled false                               # брандмауэр выключен
 ```
 
 Android сбрасывает эти правила при перезагрузке.
+
+### VPN-бэкенд
+
+VPN-бэкенд — это локальное tun-устройство `VpnService`, которое перехватывает только те приложения, которые вы выбрали для блокировки, и отбрасывает каждый полученный пакет. Он требует только одного системного диалога согласия и никакой другой настройки. Это бэкенд по умолчанию для новых установок в паре с режимом брандмауэра **Белый список** (выберите разрешённые приложения — всё остальное блокируется); изменить его можно в **Настройки → Бэкенд и рабочий режим**.
+
+После перезагрузки туннель запускается снова автоматически, а если процесс приложения был остановлен при включённом брандмауэре, защита восстанавливается при следующем открытии AndWall. Режим блокировки экрана поддерживается (туннель следует за состоянием блокировки) при условии, что на устройстве настроена блокировка экрана.
+
+Ограничения VPN-бэкенда: он работает только с приложениями текущего пользователя (без копий в рабочем профиле и клонов), правила «только мобильные данные» и режимы на основе определения переднего плана недоступны, а набор заблокированных приложений поддерживается без отдельных цепочек брандмауэра для каждого uid. Для этих возможностей по-прежнему используйте Shizuku, LibADB или Root.
+
+## Изменения в этом форке
+
+AndWall — это форк [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall). Этот форк добавляет:
+
+- **VPN-бэкенд**: бэкенд брандмауэра, не требующий настройки и работающий сразу после системного диалога согласия.
+- **Настройки по умолчанию для новых пользователей**: VPN-бэкенд, режим брандмауэра «Белый список» и скрытие приложений без доступа к сети.
+- **Обновлённый онбординг**: приветственный сценарий и выбор режима теперь упоминают все четыре бэкенда.
+- **Адаптация интерфейса для режима VPN**: режимы брандмауэра и функции, которые не может обеспечить VPN-бэкенд, скрыты, а режим брандмауэра переключается на «Белый список».
+- **Ребрендинг, обновлённые пункты настроек и переводы**, а также более подробные списки изменений и проверки обновлений для этого форка.
 
 ## Автоматизация
 
 Для каждого broadcast нужен активный бэкенд. `apps` — это CSV-список ключей приложений: простое имя пакета относится к пользователю 0, а ключ с префиксом, например `150:com.example.app`, — к копии в этом рабочем профиле или пространстве клонов.
 
-### Файрвол: `shizuwall.CONTROL`
+### Брандмауэр: `shizuwall.CONTROL`
 
 | Параметр | Тип | |
 |---|---|---|
 | `state` | boolean, обязательный | `true` = заблокировать, `false` = разблокировать |
-| `apps` | string, необязательный | Приложения, которые нужно заблокировать или разблокировать. Без него broadcast переключает весь файрвол. |
+| `apps` | string, необязательный | Приложения, которые нужно заблокировать или разблокировать. Без него broadcast переключает весь брандмауэр. |
 
 ```bash
-# Включить файрвол (state false выключает)
+# Включить брандмауэр (state false выключает его)
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true
 
-# Заблокировать приложение и его копию в рабочем профиле
+# Заблокировать приложение и его копию в рабочем профиле (state false разблокирует их)
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true --es apps "com.example.app,150:com.example.app"
 ```
 
-- С `apps` выбор в приложении синхронизируется: `state true` отмечает приложения и включает файрвол, если он был выключен; `state false` снимает отметку и оставляет файрвол включённым. В режиме белого списка `apps` относится к списку разрешённых, поэтому два состояния меняются местами.
-- Если **Показывать приложения из других профилей** выключено, простое имя пакета действует и на его клоны. Если включено, каждый профиль адресуется только через свой префикс.
+С `apps` выбор в приложении синхронизируется: `state true` отмечает приложения и включает брандмауэр, если он был выключен, `state false` снимает отметку и оставляет брандмауэр включённым. В режиме белого списка `apps` относится к списку разрешённых, поэтому два состояния меняются местами.
+
+В режиме VPN broadcast работают так же, но `apps` должен ссылаться только на приложения текущего пользователя; ключи рабочего профиля пропускаются.
 
 ### Новое приложение: `shizuwall.APP_INSTALLED`
 
-Сообщает о только что установленном приложении, чтобы политика и уведомление для новых приложений применились так, как если бы ShizuWall сам обнаружил установку. ShizuWall видит установки только в своём профиле; так можно охватить остальные.
+Сообщает о только что установленном приложении, чтобы политика и уведомление для новых приложений применились к нему так, как если бы AndWall сам обнаружил установку. AndWall видит установки только в своём профиле, поэтому так можно охватить остальные.
 
 ```bash
 adb shell am broadcast -a shizuwall.APP_INSTALLED -n com.arslan.shizuwall/.receivers.AppInstalledReceiver --es apps "com.example.newapp"
@@ -114,27 +126,37 @@ adb shell am broadcast -a shizuwall.APP_INSTALLED -n com.arslan.shizuwall/.recei
 
 ### Профиль: `shizuwall.PROFILE`
 
-Активирует сохранённый профиль: записывает его выбор приложений, режим файрвола, режимы отдельных приложений и настройку *Показать системные приложения*.
+Активирует сохранённый профиль: выбор его приложений, режим брандмауэра, режимы отдельных приложений и настройку *Показать системные приложения*.
 
 | Параметр | Тип | |
 |---|---|---|
 | `profile` | string | Имя профиля, как оно показано в списке профилей. |
 | `profile_id` | string | Внутренний идентификатор; проверяется первым и не зависит от переименований. Диалог **Автоматизация** профиля показывает готовую команду. |
-| `force_enable` | boolean, необязательный | Включить файрвол после переключения, даже если он был выключен. |
+| `force_enable` | boolean, необязательный | Включить брандмауэр после переключения, даже если он был выключен. |
 
-Обязателен один из параметров `profile` или `profile_id`. Если ни один не найден, ничего не меняется, а всплывающее сообщение сообщает об этом.
+Обязателен один из параметров `profile` или `profile_id`. Если ни один не совпадает, ничего не меняется, а всплывающее сообщение сообщает об этом.
 
 ```bash
 adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.ProfileControlReceiver --es profile "Work"
 ```
 
+## Сборка из исходников
+
+Проект собирается с помощью Gradle wrapper и Android SDK:
+
+```bash
+./gradlew assembleDebug
+```
+
+Debug-сборка использует суффикс `.debug` и может быть установлена вместе с release-сборкой. Для release-сборки нужна собственная конфигурация подписи.
+
 ## Отказ от ответственности
 
-ShizuWall предоставляется **«как есть»**, без гарантий. Он использует расширенные системные разрешения, и разработчик не несёт ответственности за нестабильность системы, потерю данных или побочные эффекты блокировки сети. Всегда проверяйте, какие приложения вы блокируете.
+AndWall предоставляется **«как есть»**, без гарантий. Он использует расширенные системные разрешения, и разработчик не несёт ответственности за нестабильность системы, потерю данных или побочные эффекты блокировки сети. Всегда проверяйте, какие приложения вы блокируете.
 
-**Официальные источники — только Google Play, F-Droid и этот репозиторий.** APK из других мест не связаны с проектом и используются на ваш риск. У ShizuWall нет официального сайта.
+Этот форк распространяется только через [этот репозиторий GitHub](https://github.com/hsushjk/AndWall). APK из любых других источников не связаны с проектом, и вы используете их на свой риск. У AndWall нет официального сайта, и он не публикуется в Google Play или F-Droid.
 
-Разрешение `INTERNET` запрашивается только для сопряжения по беспроводной отладке (LibADB).
+`INTERNET` запрашивается только для сопряжения по беспроводной отладке (LibADB).
 
 ## Лицензия
 
@@ -142,6 +164,7 @@ ShizuWall предоставляется **«как есть»**, без гар�
 
 ## Благодарности
 
+- [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall): исходный проект, на котором основан этот форк.
 - [Shizuku](https://github.com/RikkaApps/Shizuku): выполнение привилегированных команд.
-- [LibADB](https://github.com/MuntashirAkon/libadb-android): отладка по Wi-Fi и подключение к демону.
-- [Exodus Privacy](https://exodus-privacy.eu.org/): база сигнатур трекеров. ShizuWall включает её сокращённую копию и никогда не обращается к их API.
+- [LibADB](https://github.com/MuntashirAkon/libadb-android): беспроводная отладка и подключение к демону.
+- [Exodus Privacy](https://exodus-privacy.eu.org/): база сигнатур трекеров. AndWall включает её сокращённую копию и никогда не обращается к их API.

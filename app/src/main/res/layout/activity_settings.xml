@@ -339,7 +339,7 @@
                     app:strokeWidth="0dp">
 
                     <LinearLayout
-                        android:id="@+id/btnDonate"
+                        android:id="@+id/btnGithubUpstream"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:minHeight="72dp"
@@ -359,7 +359,7 @@
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@android:drawable/star_on"
+                                android:src="@drawable/ic_github"
                                 app:tint="?attr/colorPrimary"
                                 android:layout_marginEnd="12dp"
                                 android:contentDescription="@null" />
@@ -367,7 +367,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/donate"
+                                android:text="@string/github_upstream"
                                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium.Emphasized"
                                 android:textColor="?android:attr/textColorPrimary" />
                         </LinearLayout>
@@ -573,7 +573,7 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_mail"
+                        android:src="@drawable/ic_github"
                         app:tint="?attr/colorPrimary"
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@null" />
@@ -600,16 +600,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/made_by"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="?android:attr/textColorSecondary"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp" />
 
             <TextView
                 android:id="@+id/tvVersion"

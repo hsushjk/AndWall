@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ShizuWall</string>
+    <string name="app_name">AndWall</string>
     <string name="settings_category_appearance_title">外观</string>
     <string name="settings_category_appearance_desc">主题、颜色、字体、语言</string>
     <string name="settings_category_firewall_title">防火墙行为</string>
     <string name="settings_category_firewall_desc">模式、确认、错误处理</string>
     <string name="settings_category_backend_title">后端与工作模式</string>
-    <string name="settings_category_backend_desc">Shizuku、LADB、Root</string>
+    <string name="settings_category_backend_desc">VPN、Root、Shizuku、LADB</string>
     <string name="settings_category_notifications_title">通知与悬浮按钮</string>
     <string name="settings_category_notifications_desc">监控、提醒、悬浮按钮</string>
-    <string name="github_url">https://github.com/ahmetcanarslan/shizuwall</string>
-    <string name="buymeacoffee_url">https://buymeacoffee.com/ahmetcanarslan</string>
-    <string name="donate">捐赠</string>
+    <string name="github_url">https://github.com/hsushjk/AndWall</string>
+    <string name="github_upstream_url" translatable="false">https://github.com/AhmetCanArslan/ShizuWall</string>
+    <string name="github_upstream">GitHub（上游）</string>
     <string name="show_system_apps">显示系统应用</string>
     <string name="show_system_apps_description">在列表中包含 Android 系统应用，以便一并阻止。关闭后，已选择的系统应用将被取消选择。</string>
     <string name="app_visibility_change_disabled">防火墙启用时无法更改。请先关闭防火墙。</string>
@@ -27,25 +27,27 @@
     <string name="font_default">默认</string>
     <string name="font_ndot">Ndot</string>
     <string name="select_all">选择多个应用</string>
+    <string name="scroll_to_top">滚动到顶部</string>
     <string name="cat_favorites">收藏</string>
-    <string name="made_by">由 Ahmet Can Arslan 用 ❤️ 制作</string>
+
     <string name="reset_app_menu">重置应用</string>
     <string name="export_successful">导出成功</string>
     <string name="export_failed">导出失败：%s</string>
     <string name="import_successful">导入成功。请重新启动应用。</string>
     <string name="import_failed">导入失败：%s</string>
+    <string name="exit_confirm_message">再按一次返回键退出</string>
     <string name="reset_app_title">重置应用</string>
     <string name="reset_app_message">您确定要重置应用吗？这将禁用防火墙（如果激活），清除所有数据并关闭应用。</string>
     <string name="reset">重置</string>
     <string name="cancel">取消</string>
+    <string name="android11_unsupported_title">Android 11 兼容性</string>
+    <string name="android11_unsupported_message">某些运行 Android 11 的设备不支持 AndWall。如果您看到如下错误：\n - no command found set chain3 - \n这意味着您的设备不受支持，目前无能为力。</string>
+    <string name="dont_show_again">不再显示</string>
+    <string name="device_unsupported_title">设备不受支持</string>
+    <string name="device_unsupported_message">您的 Android 版本未提供 AndWall 所依赖的连接防火墙链。这在 Android 11–12 以及 MIUI/HyperOS 等部分厂商 ROM 上很常见。命令本身被系统拒绝，因此在 Shizuku、LADB 和 root 之间切换也无济于事。</string>
     <string name="firewall_cleanup_warning">警告：防火墙清理失败。请重新启动您的设备以恢复互联网访问。</string>
     <string name="app_reset_complete">应用重置完成。正在关闭…</string>
     <string name="reset_app_failed">重置应用失败：%s</string>
-    <string name="android11_unsupported_title">Android 11 兼容性</string>
-    <string name="android11_unsupported_message">某些运行 Android 11 的设备不支持 ShizuWall。如果您看到如下错误：\n - no command found set chain3 - \n这意味着您的设备不受支持，目前无能为力。</string>
-    <string name="dont_show_again">不再显示</string>
-    <string name="device_unsupported_title">设备不受支持</string>
-    <string name="device_unsupported_message">您的 Android 版本未提供 ShizuWall 所依赖的连接防火墙链。这在 Android 11–12 以及 MIUI/HyperOS 等部分厂商 ROM 上很常见。命令本身被系统拒绝，因此在 Shizuku、LADB 和 root 之间切换也无济于事。</string>
     <string name="adb_broadcast_usage_title">ADB 广播使用</string>
     <string name="adb_broadcast_field_action">操作</string>
     <string name="adb_broadcast_field_component">组件</string>
@@ -62,17 +64,18 @@
     <string name="adb_broadcast_dev_block_package">阻止指定应用</string>
     <string name="adb_broadcast_dev_unblock_package">解除指定应用阻止</string>
     <string name="adb_broadcast_dev_disable_framework">禁用防火墙框架</string>
-    <string name="adb_broadcast_extras_summary" formatted="false">%1$s (boolean): true = 启用, false = 禁用
+    <string name="adb_broadcast_extras_summary" formatted="false">%1$s（boolean）：true = 启用，false = 禁用
 
-%2$s (string, 可选): 逗号分隔的包名列表。若省略，应用将使用 ShizuWall 中保存的已选包名。</string>
+%2$s（string，可选）：以逗号分隔的应用列表。若省略，将使用 AndWall 中选定的应用整体开启或关闭防火墙。若提供，则只会拦截或解除拦截这些应用。工作资料或分身应用可在应用前加上用户 ID，例如 150:com.example.app。通过这种方式发送的应用也会在 AndWall 中被选中或取消选中，且拦截其中一个时会在防火墙关闭的情况下将其开启。</string>
     <string name="ok">确定</string>
     <string name="no_apps_selected">未选择应用</string>
     <string name="shizuku_not_running">Shizuku 未运行</string>
     <string name="shizuku_permission_required">需要 Shizuku 权限</string>
     <string name="firewall">防火墙</string>
-    <string name="welcome_title">欢迎使用 ShizuWall</string>
-    <string name="welcome_message">无需 root 或 vpn 即可阻止不需要的网络连接</string>
+    <string name="welcome_title">欢迎使用 AndWall</string>
+    <string name="welcome_message">支持 VPN、Root、Shizuku、LADB 模式</string>
     <string name="next">下一步</string>
+    <string name="notification_permission_background_request">请授予权限以继续在后台运行。</string>
     <string name="grant_permission">授予权限</string>
     <string name="favorites_title">收藏夹</string>
     <string name="favorites_message">长按应用以将其添加到收藏夹以快速访问。</string>
@@ -81,7 +84,9 @@
     <string name="sorting_onboarding_title">排序与筛选</string>
     <string name="sorting_onboarding_message">点击排序图标即可更改应用的排列方式。你也可以在这里选择是否显示系统应用和配置文件应用。</string>
     <string name="onboarding_mode_selection_title">选择工作模式</string>
-    <string name="onboarding_mode_selection_message">ShizuWall 可以工作在三种模式下。Shizuku 推荐给大多数用户。如果您的设备不支持 Shizuku，您可以选择 LADB 模式或 Root 模式。工作模式稍后可以更改。</string>
+    <string name="onboarding_mode_selection_message">AndWall 支持四种工作模式。VPN 模式无需任何配置，推荐大多数用户使用；也可以选择 Root、Shizuku 或 LADB。工作模式之后可以随时更改。</string>
+    <string name="onboarding_tour_sorting_vpn_message">点击排序图标即可更改应用的排列方式。你也可以在这里选择是否显示系统应用。</string>
+    <string name="onboarding_tour_settings_vpn_message">工作模式：VPN\n防火墙模式：白名单。已选择的应用可以联网，其他应用都会被拦截。</string>
     <string name="get_started">开始</string>
     <string name="shizuku_service_dead">Shizuku 服务已死</string>
     <string name="shizuku_update_required">需要 Shizuku 更新</string>
@@ -109,6 +114,8 @@
     <string name="selected_apps_not_installed">%d 个选定的应用未安装并被忽略。</string>
     <string name="failed_to_enable_firewall">未能为任何应用启用防火墙</string>
     <string name="failed_to_disable_firewall">未能为任何应用禁用防火墙</string>
+    <string name="screen_lock_mode_operation_failed">锁屏模式操作失败</string>
+    <string name="screen_lock_no_secure_lock_warning">此设备未设置屏幕锁。设置 PIN、图案或密码后，锁屏模式才会生效。</string>
     <string name="operation_failed_for_apps">为 %d 个应用操作失败</string>
     <string name="operation_failed_message">为以下 %d 个应用操作失败。它们已被取消选择。</string>
     <string name="details">详细信息</string>
@@ -129,10 +136,34 @@
     <string name="use_amoled_black">使用 AMOLED 主题</string>
     <string name="use_amoled_black_description">为 OLED 屏幕使用纯黑</string>
     <string name="skip_enable_confirmation_description">启用防火墙时不询问</string>
+    <string name="skip_error_dialog">跳过错误对话框</string>
+    <string name="skip_error_dialog_description">失败时不显示警告</string>
+    <string name="keep_failed_apps_selected">保持失败的应用选中</string>
+    <string name="keep_failed_apps_selected_description">失败时不取消选择应用</string>
+    <string name="auto_enable_on_shizuku_start">Shizuku 启动时自动启用防火墙</string>
+    <string name="auto_enable_on_shizuku_start_description">当 Shizuku 服务可用时自动启用防火墙</string>
+    <string name="apply_root_rules_after_reboot">重启后应用防火墙规则</string>
+    <string name="apply_root_rules_after_reboot_description">设备启动完成后，通过 root 重新应用上一次生效的防火墙规则</string>
     <string name="working_mode_title">工作模式</string>
     <string name="working_mode_summary">选择防火墙命令的执行方式</string>
     <string name="working_mode_shizuku">Shizuku</string>
-    <string name="working_mode_ladb">LADB (测试版)</string>
+    <string name="working_mode_ladb">LADB</string>
+    <string name="working_mode_root">Root (su)</string>
+    <string name="working_mode_vpn">VPN</string>
+    <string name="working_mode_vpn_summary">无需 Root、Shizuku 或 ADB。AndWall 会创建一个本地 VPN，只接管被拦截的应用，其他应用保持正常联网。</string>
+    <string name="vpn_permission_required">需要授予 VPN 权限</string>
+    <string name="vpn_permission_denied">未授予 VPN 权限，防火墙未启用。</string>
+    <string name="vpn_backend_banner_message">授予 VPN 权限后即可使用 VPN 后端</string>
+    <string name="vpn_firewall_notification_channel_name">VPN 防火墙</string>
+    <string name="vpn_firewall_notification_channel_description">保持本地 VPN 防火墙运行</string>
+    <string name="vpn_firewall_notification_title">VPN 防火墙运行中</string>
+    <string name="vpn_firewall_notification_text">正在拦截 %1$d 个应用的网络访问</string>
+    <string name="vpn_firewall_session_name">AndWall VPN 防火墙</string>
+    <string name="vpn_work_profile_unsupported">VPN 后端无法拦截工作资料中的应用</string>
+    <string name="vpn_mobile_only_unsupported">VPN 后端不支持仅拦截移动数据</string>
+    <string name="vpn_mode_requires_static_app_list">智能前台、混合模式和焦点追踪器不支持 VPN 后端，已切换到白名单模式。</string>
+    <string name="vpn_mode_backend_switch_firewall_disabled">由于切换了后端，防火墙已关闭</string>
+    <string name="root_not_found_message">未找到 Root，请允许 AndWall 获取 Root 权限。</string>
     <string name="app_monitor_service">新应用通知</string>
     <string name="app_monitor_service_description">当新应用安装时显示通知</string>
     <string name="app_monitor_whitelist_dependency">在白名单模式下，封锁新安装应用的也是该服务。如果新应用通知、新应用自动封锁和防火墙状态通知全部关闭，服务将停止，新应用会保持放行，直到关闭并重新开启防火墙，或某个自动化应用通过 shizuwall.APP_INSTALLED 广播上报该安装。</string>
@@ -152,12 +183,6 @@
     <string name="app_monitor_notification_channel_description">用于监控新应用的后台服务</string>
     <string name="app_installed_notification_channel_name">新应用已安装</string>
     <string name="app_installed_notification_channel_description">安装新应用时的通知</string>
-    <string name="skip_error_dialog">跳过错误对话框</string>
-    <string name="skip_error_dialog_description">失败时不显示警告</string>
-    <string name="keep_failed_apps_selected">保持失败的应用选中</string>
-    <string name="keep_failed_apps_selected_description">失败时不取消选择应用</string>
-    <string name="auto_enable_on_shizuku_start">Shizuku 启动时自动启用防火墙</string>
-    <string name="auto_enable_on_shizuku_start_description">当 Shizuku 服务可用时自动启用防火墙</string>
     <string name="theme">主题</string>
     <string name="font">字体</string>
     <string name="language">语言</string>
@@ -168,7 +193,9 @@
     <string name="github">GitHub</string>
     <string name="settings">设置</string>
     <string name="selected_count_zero">0</string>
+    <string name="double_tap_or_long_press">双击可选择多个应用，长按可取消选择多个应用</string>
     <string name="loading_apps">正在加载应用</string>
+
     <string name="shizuku_setup_guide">Shizuku 设置指南</string>
     <string name="shizuku_guide_tour_message">你可以随时在这里设置 Shizuku。</string>
     <string name="open_ladb_setup">打开 LADB 设置</string>
@@ -180,14 +207,14 @@
     <string name="ladb_auto_pairing_description">自动发现并配对网络中的无线调试。</string>
     <string name="ladb_manual_connection_title">手动连接</string>
     <string name="ladb_manual_connection_description">已配对？输入指定的主机和端口直接连接，适用于自动发现失败或端口不断变化的情况。</string>
-    <string name="manual_host_hint">Host (usually 127.0.0.1)</string>
-    <string name="manual_port_hint">Connect port</string>
-    <string name="btn_check_and_connect">Check &amp; Connect</string>
-    <string name="manual_connect_checking">Checking port…</string>
-    <string name="manual_connect_success">Connected using saved port.</string>
-    <string name="manual_connect_not_available">Nothing reachable on that host/port.</string>
-    <string name="manual_connect_needs_pairing">Port reachable but not paired yet. Use Pair below.</string>
-    <string name="manual_connect_invalid_port">Enter a valid port (1–65535).</string>
+    <string name="manual_host_hint">主机（通常为 127.0.0.1）</string>
+    <string name="manual_port_hint">连接端口</string>
+    <string name="btn_check_and_connect">检查并连接</string>
+    <string name="manual_connect_checking">正在检查端口…</string>
+    <string name="manual_connect_success">已使用保存的端口连接。</string>
+    <string name="manual_connect_not_available">该主机/端口无法访问。</string>
+    <string name="manual_connect_needs_pairing">端口可访问，但尚未配对。请使用下方的“配对”。</string>
+    <string name="manual_connect_invalid_port">请输入有效端口（1–65535）。</string>
     <string name="manual_connect_authorize">端口可访问。如果此设备上出现对话框，请点按“允许”进行授权。</string>
     <string name="manual_connect_authorize_timeout">可访问，但未能及时授权。请在此设备上接受“允许无线调试”提示，然后再次点按“连接”。</string>
     <string name="ladb_status_unconfigured">未配置</string>
@@ -195,11 +222,13 @@
     <string name="ladb_status_connected">Ladb 已连接到无线调试</string>
     <string name="ladb_status_disconnected">已断开连接</string>
     <string name="ladb_error_title">LADB 错误</string>
-    <string name="ladb_hint_connection_refused">连接被拒绝通常意味着无线调试已关闭或您使用了错误的端口。请使用开发者选项 → 无线调试 → IP 地址和端口中显示的端口（不是配对端口）。还要确保在无线调试中允许 ShizuWall。</string>
+    <string name="ladb_hint_connection_refused">连接被拒绝通常意味着无线调试已关闭或您使用了错误的端口。请使用开发者选项 → 无线调试 → IP 地址和端口中显示的端口（不是配对端口）。还要确保在无线调试中允许 AndWall。</string>
+
     <string name="ladb_pairing_channel_name">LADB 配对</string>
     <string name="ladb_pairing_notification_title">输入配对代码</string>
     <string name="ladb_pairing_notification_text">点击并输入无线调试 → 配对设备中显示的配对端口和代码。</string>
     <string name="ladb_pairing_notification_text_code_only">点击并输入无线调试 → 配对设备中显示的配对代码。</string>
+
     <string name="ladb_pairing_details_hint_port_code">输入：端口 代码 (例如 37133 123456)</string>
     <string name="ladb_pairing_details_hint_code_only">输入配对代码 (例如 123456)</string>
     <string name="ladb_enter_pairing_details_action">发送</string>
@@ -207,7 +236,7 @@
     <string name="ladb_pairing_result_success_title">LADB 已配对</string>
     <string name="ladb_pairing_result_success_text">配对成功。您现在可以连接了。</string>
     <string name="ladb_pairing_result_failed_title">LADB 配对失败</string>
-    <string name="ladb_pairing_result_failed_text">打开 ShizuWall 查看错误日志。</string>
+    <string name="ladb_pairing_result_failed_text">打开 AndWall 查看错误日志。</string>
     <string name="ladb_pairing_result_missing_code">缺少配对代码。请从无线调试 → 配对设备中输入。</string>
     <string name="ladb_pairing_result_missing_port">缺少配对端口。输入：端口 代码 (来自无线调试 → 配对设备)。</string>
     <string name="ladb_notification_permission_required">需要通知权限来显示配对代码提示。</string>
@@ -228,6 +257,14 @@
     <string name="daemon_start">启动守护进程</string>
     <string name="daemon_kill">停止守护进程</string>
     <string name="daemon_installing">正在安装...</string>
+    <string name="ladb_daemon_restart_required_title">重启 LADB 守护进程</string>
+    <string name="ladb_daemon_restart_required_message">由于 LADB 守护进程授权失败或停止响应，无法启用防火墙。请打开 LADB 设置，启用高级模式，然后使用 停止守护进程 和 启动守护进程。</string>
+    <string name="ladb_daemon_restart_reason_prefix">检测到的问题：</string>
+    <string name="ladb_daemon_restart_reason_auth">守护进程授权失败。应用中的守护进程令牌与正在运行的守护进程可能不同步。</string>
+    <string name="ladb_daemon_restart_reason_unresponsive">守护进程没有响应，或其套接字正在拒绝连接。</string>
+    <string name="ladb_daemon_restart_reason_token">守护进程日志提到令牌问题，或缺少令牌文件。</string>
+    <string name="ladb_daemon_restart_log_prefix">最近的守护进程日志：</string>
+    <string name="ladb_daemon_log_detected_hint">最近的守护进程日志可在“详情”中查看。</string>
     <string name="sort">排序</string>
     <string name="sort_name_asc">A-Z</string>
     <string name="sort_name_desc">Z-A</string>
@@ -236,9 +273,9 @@
     <string name="failed_to_unblock_count">无法取消阻止 %d 个应用</string>
     <string name="failed_to_unblock_app">无法取消阻止 %s</string>
     <string name="notification_permission_required_title">需要通知权限</string>
-    <string name="notification_permission_required_message">ShizuWall 需要通知权限来显示配对代码通知。\n\n如果没有此权限，您将无法轻松输入配对代码。</string>
+    <string name="notification_permission_required_message">AndWall 需要通知权限来显示配对代码通知。\n\n如果没有此权限，您将无法轻松输入配对代码。</string>
     <string name="cannot_continue">无法继续</string>
-    <string name="notification_permission_required_ladb">使用 LADB 配对功能需要通知权限。此权限允许我们显示重要的配对信息。\n\n请授予通知权限以继续。政策。</string>
+    <string name="notification_permission_required_ladb">使用 LADB 配对功能需要通知权限。此权限用于显示重要的配对信息。\n\n请授予通知权限以继续。</string>
     <string name="enter_pairing_code_hint">将无线调试页面中的配对代码输入到通知中。</string>
     <string name="waiting_for_pairing_discovery">正在等待配对服务发现...</string>
     <string name="no_connection_config_found">未找到连接配置。请等待自动发现或检查无线调试。</string>
@@ -249,6 +286,7 @@
     <string name="already_in_list">%s 已在列表中</string>
     <string name="error_format">错误：%s</string>
     <string name="firewall_reboot_message">重启后应再次启用防火墙。点击以打开应用。</string>
+    <string name="firewall_reboot_apply_failed_message">重启后重新应用防火墙规则失败。点击以打开应用。</string>
     <string name="open_developer_settings">打开开发者选项</string>
     <string name="ladb_connection_failed_help">连接失败。请检查：\n1. 开发者选项中已启用无线调试\n2. 设备在同一网络中\n3. 没有防火墙阻止连接</string>
     <string name="copy_logs_success">日志已复制到剪贴板！</string>
@@ -257,7 +295,7 @@
     <string name="log_showing_pairing_notif">正在显示配置的配对通知：%1$s:%2$d</string>
     <string name="log_logging_enabled">日志记录已启用</string>
     <string name="log_daemon_already_running">守护进程已在运行</string>
-    <string name="log_killing_daemon">正在通过 LADB 停止守护进程...政策。</string>
+    <string name="log_killing_daemon">正在通过 LADB 停止守护进程…</string>
     <string name="log_kill_success">停止命令发送成功</string>
     <string name="log_kill_failed">停止命令失败：%s</string>
     <string name="log_starting_connection">正在启动连接...</string>
@@ -274,22 +312,41 @@
     <string name="log_logs_cleared">日志已清除</string>
     <string name="log_logs_copied">日志已复制到剪贴板</string>
 
-    <string name="exit_confirm_message">再按一次返回键退出</string>
-
     <string name="firewall_mode_title">防火墙模式</string>
     <string name="firewall_mode_default">默认</string>
     <string name="firewall_mode_default_description">传统防火墙 - 阻止所选应用</string>
     <string name="firewall_mode_adaptive">自适应</string>
     <string name="firewall_mode_adaptive_description">立即应用规则。防火墙保持开启。</string>
-    <string name="firewall_mode_smart_foreground">智能前台 (测试版)</string>
+    <string name="firewall_mode_whitelist">白名单</string>
+    <string name="firewall_mode_whitelist_description">默认阻止所有应用，允许选定的应用</string>
+    <string name="firewall_mode_screen_lock">锁屏模式</string>
+    <string name="firewall_mode_screen_lock_description">锁定时拦截选定的应用，解锁后恢复</string>
+    <string name="whitelist_info_system_apps_warning">当"显示系统应用"被禁用时，系统应用将不会在白名单模式下被防火墙阻止。\n\n如果您已启用"显示系统应用"并使用白名单模式，此组合尚未完全测试。请谨慎使用。\n\n防火墙开启期间安装到工作资料或分身空间的应用不会被检测到，在关闭并重新开启防火墙之前会保持放行。</string>
+    <string name="firewall_mode_smart_foreground">智能前台</string>
     <string name="firewall_mode_smart_foreground_description">仅允许当前前台应用</string>
-    
+
     <string name="firewall_mode_focus_tracker">焦点追踪器</string>
-    <string name="firewall_mode_focus_tracker_description">当 ShizuWall 处于非活动状态时启用防火墙，处于活动状态时禁用。</string>
+    <string name="firewall_mode_focus_tracker_description">当 AndWall 处于非活动状态时启用防火墙，处于活动状态时禁用。</string>
+
+    <string name="firewall_mode_details_button">这些模式如何工作？</string>
+    <string name="firewall_mode_details_title">防火墙模式的工作方式</string>
+    <string name="firewall_mode_default_details">你勾选要拦截的应用，然后开启防火墙。只有这些应用会失去网络，其他应用照常联网。修改勾选后，需要关闭并重新开启防火墙才会生效。</string>
+    <string name="firewall_mode_adaptive_details">拦截列表与默认模式相同，但编辑时防火墙保持开启。勾选或取消勾选应用会立即生效，无需关闭再开启防火墙。</string>
+    <string name="firewall_mode_whitelist_details">选择被反转：默认拦截所有应用，只有你勾选的应用保留网络。注意：关闭「显示系统应用」时，该模式不会拦截系统应用。</string>
+    <string name="firewall_mode_screen_lock_details">选中的应用在屏幕锁定时被拦截，解锁后恢复。可以设置延迟，避免短暂息屏就触发拦截。后台服务负责监视锁屏状态，重启后仍会继续工作。</string>
+    <string name="firewall_mode_smart_foreground_details">只有你当前正在使用的应用保留网络。其他选中的应用保持拦截，切换到别的应用时网络权限随之转移。后台服务约每秒检查一次前台应用，因此需要持续运行，会略微增加耗电。</string>
+    <string name="firewall_mode_focus_tracker_details">防火墙跟随 AndWall 自身：离开或最小化 AndWall 会开启防火墙，再次打开则关闭防火墙。适合让拦截恰好在你修改设置期间暂停。</string>
+    <string name="firewall_mode_hybrid_details">每个应用单独设置模式，而不是所有应用共用一条规则。可为每个应用选择默认拦截（始终拦截）、智能前台（仅使用时放行）或屏幕锁定（锁屏时拦截）。这些规则同时生效。</string>
+    <string name="firewall_mode_details_foreground_note">智能前台、混合模式和焦点跟踪需要检测前台应用。可通过 Shizuku 实现，或通过使用情况访问权限实现——在 LADB 和 Root 模式下，AndWall 会用特权 shell 自行授予该权限。</string>
+    <string name="firewall_mode_hybrid">混合模式</string>
+    <string name="firewall_mode_hybrid_description">为每个应用单独配置模式</string>
+    <string name="hybrid_mode_default_block">默认阻止</string>
+    <string name="hybrid_mode_smart_foreground">智能前台</string>
+    <string name="hybrid_mode_screen_lock">锁屏</string>
     <string name="smart_foreground_notification_channel_name">智能前台 (服务)</string>
     <string name="smart_foreground_notification_channel_description">用于监控前台应用的后台服务</string>
     <string name="smart_foreground_active">智能前台已激活</string>
-    
+
     <string name="focus_tracker_active">焦点追踪器：已启用</string>
     <string name="focus_tracker_paused">焦点追踪器：未激活</string>
     <string name="smart_foreground_active_app">活动: %s</string>
@@ -301,76 +358,39 @@
     <string name="select_font">选择字体</string>
     <string name="apply">应用</string>
 
-    <string name="firewall_mode_whitelist">白名单</string>
-    <string name="firewall_mode_whitelist_description">默认阻止所有应用，允许选定的应用</string>
-    <string name="whitelist_info_system_apps_warning">当"显示系统应用"被禁用时，系统应用将不会在白名单模式下被防火墙阻止。\n\n如果您已启用"显示系统应用"并使用白名单模式，此组合尚未完全测试。请谨慎使用。\n\n防火墙开启期间安装到工作资料或分身空间的应用不会被检测到，在关闭并重新开启防火墙之前会保持放行。</string>
+    <string name="screen_lock_delay_title">锁定延迟</string>
+    <string name="screen_lock_delay_value">锁定 %1$d 秒后启用</string>
+    <string name="screen_lock_delay_dialog_title">锁屏延迟</string>
+    <string name="screen_lock_mode_notification_channel_name">锁屏模式 (服务)</string>
+    <string name="screen_lock_mode_notification_channel_description">锁屏自动化的后台服务</string>
+    <string name="screen_lock_mode_notification_title">锁屏模式</string>
 
-    <string name="firewall_mode_details_button">这些模式如何工作？</string>
-    <string name="firewall_mode_details_title">防火墙模式的工作方式</string>
-    <string name="firewall_mode_default_details">你勾选要拦截的应用，然后开启防火墙。只有这些应用会失去网络，其他应用照常联网。修改勾选后，需要关闭并重新开启防火墙才会生效。</string>
-    <string name="firewall_mode_adaptive_details">拦截列表与默认模式相同，但编辑时防火墙保持开启。勾选或取消勾选应用会立即生效，无需关闭再开启防火墙。</string>
-    <string name="firewall_mode_whitelist_details">选择被反转：默认拦截所有应用，只有你勾选的应用保留网络。注意：关闭「显示系统应用」时，该模式不会拦截系统应用。</string>
-    <string name="firewall_mode_screen_lock_details">选中的应用在屏幕锁定时被拦截，解锁后恢复。可以设置延迟，避免短暂息屏就触发拦截。后台服务负责监视锁屏状态，重启后仍会继续工作。</string>
-    <string name="firewall_mode_smart_foreground_details">只有你当前正在使用的应用保留网络。其他选中的应用保持拦截，切换到别的应用时网络权限随之转移。后台服务约每秒检查一次前台应用，因此需要持续运行，会略微增加耗电。</string>
-    <string name="firewall_mode_focus_tracker_details">防火墙跟随 ShizuWall 自身：离开或最小化 ShizuWall 会开启防火墙，再次打开则关闭防火墙。适合让拦截恰好在你修改设置期间暂停。</string>
-    <string name="firewall_mode_hybrid_details">每个应用单独设置模式，而不是所有应用共用一条规则。可为每个应用选择默认拦截（始终拦截）、智能前台（仅使用时放行）或屏幕锁定（锁屏时拦截）。这些规则同时生效。</string>
-    <string name="firewall_mode_details_foreground_note">智能前台、混合模式和焦点跟踪需要检测前台应用。可通过 Shizuku 实现，或通过使用情况访问权限实现——在 LADB 和 Root 模式下，ShizuWall 会用特权 shell 自行授予该权限。</string>
-    <string name="firewall_mode_hybrid">混合模式</string>
-    <string name="firewall_mode_hybrid_description">为每个应用单独配置模式</string>
-    <string name="hybrid_mode_default_block">默认阻止</string>
-    <string name="hybrid_mode_smart_foreground">智能前台</string>
-    <string name="hybrid_mode_screen_lock">锁屏</string>
     <string name="floating_button">悬浮防火墙按钮</string>
     <string name="floating_button_description">显示一个可拖动的悬浮按钮，随时随地切换防火墙</string>
     <string name="floating_button_notification_channel_name">悬浮按钮 (服务)</string>
     <string name="floating_button_notification_channel_description">悬浮防火墙按钮的后台服务</string>
     <string name="notification_hold_to_disable">长按可关闭此通知</string>
+    <string name="notification_body_with_hint" translatable="false">%1$s · %2$s</string>
     <string name="floating_button_notification_title">悬浮防火墙按钮</string>
     <string name="floating_button_content_description">切换防火墙</string>
     <string name="overlay_permission_required">悬浮按钮需要悬浮窗权限</string>
-    <string name="scroll_to_top">滚动到顶部</string>
-    <string name="apply_root_rules_after_reboot">重启后应用防火墙规则</string>
-    <string name="apply_root_rules_after_reboot_description">设备启动完成后，通过 root 重新应用上一次生效的防火墙规则</string>
-    <string name="working_mode_root">Root (su)</string>
-    <string name="root_not_found_message">未找到 Root，请允许 ShizuWall 获取 Root 权限。</string>
-    <string name="double_tap_or_long_press">双击可选择多个应用，长按可取消选择多个应用</string>
-    <string name="ladb_daemon_restart_required_title">重启 LADB 守护进程</string>
-    <string name="ladb_daemon_restart_required_message">由于 LADB 守护进程授权失败或停止响应，无法启用防火墙。请打开 LADB 设置，启用高级模式，然后使用 停止守护进程 和 启动守护进程。</string>
-    <string name="ladb_daemon_restart_reason_prefix">检测到的问题：</string>
-    <string name="ladb_daemon_restart_reason_auth">守护进程授权失败。应用中的守护进程令牌与正在运行的守护进程可能不同步。</string>
-    <string name="ladb_daemon_restart_reason_unresponsive">守护进程没有响应，或其套接字正在拒绝连接。</string>
-    <string name="ladb_daemon_restart_reason_token">守护进程日志提到令牌问题，或缺少令牌文件。</string>
-    <string name="ladb_daemon_restart_log_prefix">最近的守护进程日志：</string>
-    <string name="ladb_daemon_log_detected_hint">最近的守护进程日志可在“详情”中查看。</string>
-    <string name="firewall_reboot_apply_failed_message">重启后重新应用防火墙规则失败。点击以打开应用。</string>
 
-    <string name="notification_permission_background_request">请授予权限以继续在后台运行。</string>
-
-    <string name="screen_lock_mode_notification_channel_name">锁屏模式 (服务)</string>
-    <string name="screen_lock_delay_title">锁定延迟</string>
-    <string name="firewall_mode_screen_lock_description">锁定屏幕时阻止选定的应用</string>
-    <string name="screen_lock_delay_value">锁定 %1$d 秒后启用</string>
-    <string name="firewall_mode_screen_lock">锁屏模式</string>
-    <string name="screen_lock_mode_notification_title">锁屏模式</string>
-    <string name="screen_lock_mode_operation_failed">锁屏模式操作失败</string>
-    <string name="screen_lock_mode_notification_channel_description">锁屏自动化的后台服务</string>
-    <string name="screen_lock_delay_dialog_title">锁屏延迟</string>
-
-    <string name="floating_settings_title">Floating Button</string>
-    <string name="floating_settings_content_description">Personalize floating button</string>
-    <string name="floating_idle_opacity">Idle transparency</string>
-    <string name="floating_idle_opacity_desc">How visible the button stays when idle</string>
-    <string name="floating_size">Button size</string>
-    <string name="floating_size_desc">Size of the floating button</string>
-    <string name="floating_fade_delay">Fade delay</string>
-    <string name="floating_fade_delay_desc">Time before the button fades when idle</string>
-    <string name="floating_edge_snap">Hide at screen edge</string>
-    <string name="floating_edge_snap_desc">Tuck the button against the nearest edge when idle to prevent accidental taps. Tap once to reveal it.</string>
+    <string name="floating_settings_title">悬浮按钮</string>
+    <string name="floating_settings_content_description">自定义悬浮按钮</string>
+    <string name="floating_idle_opacity">闲置透明度</string>
+    <string name="floating_idle_opacity_desc">按钮闲置时保持的可见程度</string>
+    <string name="floating_size">按钮大小</string>
+    <string name="floating_size_desc">悬浮按钮的大小</string>
+    <string name="floating_fade_delay">淡出延迟</string>
+    <string name="floating_fade_delay_desc">按钮闲置多久后开始淡出</string>
+    <string name="floating_edge_snap">在屏幕边缘隐藏</string>
+    <string name="floating_edge_snap_desc">闲置时将按钮收进最近的屏幕边缘，以防误触。点按一次即可显示。</string>
     <string name="floating_percent_format">%1$d%%</string>
     <string name="floating_dp_format">%1$d dp</string>
     <string name="floating_seconds_format">%1$d s</string>
     <string name="floating_disable_dim">不要变暗</string>
     <string name="floating_disable_dim_desc">闲置时保持按钮完全可见，永不淡出或收进边缘</string>
+
     <string name="profiles">配置文件</string>
     <string name="profiles_subtitle">一键切换防火墙场景</string>
     <string name="profile_auto_enable_firewall">启用配置时自动开启防火墙</string>
@@ -397,7 +417,7 @@
     <string name="profile_tile_label_5">配置文件磁贴 5</string>
     <string name="profile_tile_collapse_shade">点按磁贴时关闭快捷设置</string>
     <string name="profile_tile_unassigned">未分配配置文件</string>
-    <string name="profile_tile_no_slot">%1$d 个配置文块均已使用</string>
+    <string name="profile_tile_no_slot">所有 %1$d 个配置文件磁贴均已使用</string>
     <string name="profile_tile_add_manually">磁贴已就绪。请在快捷设置编辑页面添加“%1$s”。</string>
     <string name="profile_widget_no_profiles">请先创建配置文件</string>
     <string name="profile_switched_firewall_on">%1$s 已启用 · 防火墙已开启</string>
@@ -427,7 +447,7 @@
     <string name="app_info_internet_no">无联网权限</string>
     <string name="app_info_mobile_only">仅阻止移动数据</string>
     <string name="app_info_wifi_only">仅阻止 Wi‑Fi</string>
-    <string name="app_info_wifi_only_summary">不支持。ShizuWall 不使用 VPN 或基于 root 的规则，因此无法单独阻止 Wi‑Fi。</string>
+    <string name="app_info_wifi_only_summary">不支持。AndWall 不使用 VPN 或基于 root 的规则，因此无法单独阻止 Wi‑Fi。</string>
     <string name="app_info_block_all">阻止所有网络</string>
     <string name="app_info_block_all_summary">Wi‑Fi 和移动数据都会被阻止。</string>
     <string name="app_info_mobile_only_summary">此应用被阻止时仍允许使用 Wi‑Fi。仅阻止按流量计费的网络:移动数据以及被标记为按流量计费的 Wi‑Fi(例如热点)。</string>
@@ -439,7 +459,7 @@
     <string name="app_info_trackers_none">未发现已知追踪器</string>
     <string name="app_info_trackers_count">发现 %1$d 个追踪器</string>
     <string name="app_info_trackers_failed">无法扫描此应用</string>
-    <string name="app_info_trackers_note">通过扫描应用代码发现。ShizuWall 不使用 VPN，也不检查流量。封锁该应用时，这些追踪器也会被断开。</string>
+    <string name="app_info_trackers_note">通过扫描应用代码发现。AndWall 不使用 VPN，也不检查流量。封锁该应用时，这些追踪器也会被断开。</string>
     <string name="tracker_data_attribution">追踪器数据：Exodus Privacy，ODbL 1.0</string>
     <string name="show_other_profiles">显示其他配置文件中的应用</string>
     <string name="main_profile">主配置文件</string>
@@ -473,22 +493,22 @@
     <string name="remember_deleted_apps">记住已删除的应用</string>
     <string name="remember_deleted_apps_description">保留已删除或已停用应用的拦截状态，并在其恢复时还原</string>
     <string name="foreground_detection_unavailable">前台检测不可用</string>
-    <string name="foreground_detection_unavailable_message">ShizuWall 无法连接到报告前台应用的特权助手，因此 Smart Foreground、Hybrid 和 Focus Tracker 模式无法管理应用。请检查工作模式（Shizuku、LADB 或 Root）是否已设置并正在运行。</string>
+    <string name="foreground_detection_unavailable_message">AndWall 无法连接到用于报告前台应用的特权助手，因此智能前台、混合模式和焦点追踪器无法管理应用。请检查工作模式（Shizuku、LADB 或 Root）是否已配置并正在运行。</string>
     <string name="empty_app_list_title">没有可显示的应用</string>
     <string name="empty_app_list_message">仅列出用户安装的应用。开启系统应用以查看此设备上的全部应用。</string>
     <string name="empty_app_list_action">显示系统应用</string>
     <string name="empty_app_list_search_title">无结果</string>
     <string name="empty_app_list_search_message">没有与搜索匹配的应用。</string>
     <string name="backend_banner_title">需要先完成设置</string>
-    <string name="backend_banner_message_shizuku">ShizuWall 需要 Shizuku 正在运行并已授予权限，才能拦截应用。</string>
-    <string name="backend_banner_message_ladb">ShizuWall 需要本地 ADB 守护进程正在运行，才能拦截应用。请通过无线调试配对以启动它。</string>
-    <string name="backend_banner_message_root">ShizuWall 需要 root 权限才能拦截应用。</string>
+    <string name="backend_banner_message_shizuku">AndWall 需要 Shizuku 正在运行并已授予权限，才能拦截应用。</string>
+    <string name="backend_banner_message_ladb">AndWall 需要本地 ADB 守护进程正在运行，才能拦截应用。请通过无线调试配对以启动它。</string>
+    <string name="backend_banner_message_root">AndWall 需要 root 权限才能拦截应用。</string>
     <string name="backend_banner_action">去设置</string>
     <string name="app_unsupported_system_uid">此应用使用系统 UID(小于 10000)运行。Android 会让系统 UID 不受按应用防火墙规则约束,因此无法阻止它。</string>
     <string name="settings_category_security_title">安全</string>
     <string name="settings_category_security_desc">应用锁、PIN 码和生物识别</string>
     <string name="app_lock_title">应用锁</string>
-    <string name="app_lock_description">打开 ShizuWall 时需要 PIN 码或生物识别</string>
+    <string name="app_lock_description">打开 AndWall 时需要 PIN 码或生物识别</string>
     <string name="app_lock_use_biometrics">使用生物识别</string>
     <string name="app_lock_use_biometrics_description">用指纹或面容解锁，无需输入 PIN 码</string>
     <string name="app_lock_change_pin">更改 PIN 码</string>
@@ -498,27 +518,25 @@
     <string name="app_lock_pin_mismatch">两次 PIN 码不一致</string>
     <string name="app_lock_pin_length_required">请输入 %1$d 位数字</string>
     <string name="app_lock_pin_length">PIN 位数</string>
-    <string name="app_lock_pin_not_recoverable">PIN 码无法找回。如果忘记，只能清除 ShizuWall 的应用数据，这会删除所有设置和配置文件。</string>
-    <string name="app_lock_scope_warning">此锁定仅阻止打开 ShizuWall。防火墙规则保存在 Android 中，仍可通过宏应用、ADB 广播、快速设置卡片或桌面小组件修改。</string>
+    <string name="app_lock_pin_not_recoverable">PIN 码无法找回。如果忘记，只能清除 AndWall 的应用数据，这会删除所有设置和配置文件。</string>
+    <string name="app_lock_scope_warning">此锁定仅阻止打开 AndWall。防火墙规则保存在 Android 中，仍可通过宏应用、ADB 广播、快速设置卡片或桌面小组件修改。</string>
     <string name="app_lock_biometric_offer_title">使用生物识别解锁？</string>
-    <string name="app_lock_biometric_offer_message">开启后，任何能用指纹或人脸解锁本设备的人也能打开 ShizuWall 并更改防火墙。若设备为共用且只应由你控制防火墙，请保持关闭。</string>
+    <string name="app_lock_biometric_offer_message">开启后，任何能用指纹或人脸解锁本设备的人也能打开 AndWall 并更改防火墙。若设备为共用且只应由你控制防火墙，请保持关闭。</string>
     <string name="app_lock_biometric_offer_enable">使用生物识别</string>
     <string name="app_lock_biometric_offer_pin_only">仅使用 PIN</string>
     <string name="app_lock_wrong_pin">PIN 码错误</string>
     <string name="app_lock_locked_out">尝试次数过多，请在 %1$d 秒后重试</string>
-    <string name="app_lock_biometric_title">解锁 ShizuWall</string>
+    <string name="app_lock_biometric_title">解锁 AndWall</string>
     <string name="app_lock_use_pin">使用 PIN 码</string>
     <string name="app_lock_pin_saved">PIN 码已保存</string>
     <string name="app_lock_delete">删除</string>
     <string name="app_lock_submit">确认</string>
-    <string name="contact_developer">联系开发者</string>
-    <string name="contact_developer_description">发送反馈或报告问题</string>
-    <string name="contact_developer_no_app">未找到电子邮件应用</string>
+    <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
+    <string name="contact_developer">报告问题</string>
+    <string name="contact_developer_description">在 GitHub 上打开 AndWall 的问题追踪器</string>
+    <string name="open_link_failed">没有可用于打开此链接的应用</string>
     <string name="changelog_title">%1$s 更新内容</string>
-    <string name="changelog_message">• 设置中新增检查更新\n• 修复混合模式下按应用选择的问题\n• 修复切换隐藏选项时列表出现空隙的问题\n• 重新整理设置布局</string>
-    <string name="whats_new">新功能</string>
-    <string name="whats_new_description">查看此版本的更新内容</string>
-    <string name="dismiss">关闭</string>
+    <string name="changelog_message">• 新增 VPN 模式</string>
     <string name="check_update">检查更新</string>
     <string name="check_update_description">在 GitHub 上查找新版本</string>
     <string name="update_available_title">有可用更新</string>
@@ -526,6 +544,10 @@
     <string name="update_download">下载</string>
     <string name="update_up_to_date">已是最新版本</string>
     <string name="update_check_failed">无法检查更新</string>
+  <string name="update_no_releases">尚未发布任何版本</string>
+    <string name="whats_new">新功能</string>
+    <string name="whats_new_description">查看此版本的更新内容</string>
+    <string name="dismiss">关闭</string>
     <string name="update_skip_version">跳过此版本</string>
     <string name="auto_check_updates">检查更新</string>
 </resources>

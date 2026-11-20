@@ -40,7 +40,7 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             applicationIdSuffix = ".debug"
-            manifestPlaceholders["appLabel"] = "ShizuWall Debug"
+            manifestPlaceholders["appLabel"] = "AndWall Debug"
         }
     }
 
@@ -92,7 +92,7 @@ android {
     applicationVariants.all {
         outputs.all {
             val output = this as com.android.build.gradle.internal.api.ApkVariantOutputImpl
-            val appName = "ShizuWall"
+            val appName = "AndWall"
             val version = versionName
             val type = buildType.name
             output.outputFileName = "$appName-$version-$type.apk"
@@ -161,7 +161,8 @@ abstract class CompileDaemonDexTask : DefaultTask() {
     @TaskAction
     fun compile() {
         val sdk = sdkDirectory.get().asFile
-        val d8 = File(sdk, "build-tools/${buildToolsVersion.get()}/d8")
+        val d8Name = if (System.getProperty("os.name").orEmpty().lowercase().contains("win")) "d8.bat" else "d8"
+        val d8 = File(sdk, "build-tools/${buildToolsVersion.get()}/$d8Name")
         val androidJar = File(sdk, "platforms/android-${compileSdkVersion.get()}/android.jar")
         require(d8.exists()) { "d8 not found at $d8 (install the matching build-tools)" }
         require(androidJar.exists()) { "android.jar not found at $androidJar" }

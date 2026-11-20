@@ -83,6 +83,7 @@ import com.arslan.shizuwall.firewall.ForegroundTaskProbe
 import com.arslan.shizuwall.firewall.FirewallCommands
 import com.arslan.shizuwall.firewall.FirewallTargets
 import com.arslan.shizuwall.firewall.PerUidFirewall
+import com.arslan.shizuwall.firewall.VpnFirewallController
 import com.arslan.shizuwall.utils.AppIds
 import com.arslan.shizuwall.utils.AppKey
 import com.arslan.shizuwall.utils.CrossUserAppInfo
@@ -139,6 +140,9 @@ class MainActivity : BaseActivity() {
 
         const val ACTION_FIREWALL_CONTROL = "shizuwall.CONTROL" 
         const val EXTRA_PACKAGES_CSV = "apps"
+
+        /** Ask the activity to request the system VPN consent (used by the tile/widget). */
+        const val EXTRA_REQUEST_VPN_CONSENT = "request_vpn_consent"
 
         const val KEY_FIREWALL_UPDATE_TS = "firewall_update_ts"
         const val KEY_APP_MONITOR_ENABLED = "app_monitor_enabled"
@@ -315,12 +319,31 @@ class MainActivity : BaseActivity() {
             moveSelectedTop = sharedPreferences.getBoolean(KEY_MOVE_SELECTED_TOP, false)
             firewallMode = FirewallMode.fromName(sharedPreferences.getString(KEY_FIREWALL_MODE, FirewallMode.DEFAULT.name))
             updateFirewallToggleThumbIcon()
+            updateProfileButtonVisibility()
             appListRefreshPending = false
             loadInstalledApps()
             updateCategoryChips()
             
             if (isFirewallEnabled) applyListInteractionState()
             appListAdapter.setMode(firewallMode)
+        }
+    }
+
+    private val vpnConsentLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            resumeAfterBackendPermissionGranted()
+            refreshBackendBanner()
+        } else {
+            pendingToggleEnable = false
+            pendingToggleDisable = false
+            pendingEnableSelectedApps = null
+            pendingDisableActivePackages = null
+            pendingAutoEnable = false
+            pendingAutoEnableSelectedApps = null
+            setToggleChecked(isFirewallEnabled)
+            Toast.makeText(this, getString(R.string.vpn_permission_denied), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -338,7 +361,9 @@ class MainActivity : BaseActivity() {
             prefs.edit().putBoolean("onboarding_complete", true).apply()
             sharedPreferences.edit()
                 .putString(KEY_LAST_SEEN_CHANGELOG, changelogId(this))
-                .putString(KEY_FIREWALL_MODE, FirewallMode.ADAPTIVE.name)
+                .putString(KEY_WORKING_MODE, WorkingMode.VPN.name)
+                .putString(KEY_FIREWALL_MODE, FirewallMode.WHITELIST.name)
+                .putBoolean(KEY_HIDE_NO_INTERNET_APPS, true)
                 .putBoolean(KEY_SKIP_ENABLE_CONFIRM, true)
                 .apply()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -347,14 +372,18 @@ class MainActivity : BaseActivity() {
         }
 
         if (sharedPreferences.getBoolean(KEY_AUTO_CHECK_UPDATES, false)) lifecycleScope.launch {
-            val release = withContext(Dispatchers.IO) { runCatching { UpdateChecker.fetchLatest() }.getOrNull() }
-            val fresh = release != null && release.tag != sharedPreferences.getString(KEY_SKIPPED_UPDATE, null)
-            if (fresh && UpdateChecker.isNewer(release!!.tag, BuildConfig.VERSION_NAME)) {
+            val release = withContext(Dispatchers.IO) {
+                runCatching { UpdateChecker.check() }.getOrNull()?.release
+            }
+            val skipped = sharedPreferences.getString(KEY_SKIPPED_UPDATE, null)
+            if (release != null && release.tag != skipped &&
+                UpdateChecker.isNewer(release.tag, BuildConfig.VERSION_NAME)) {
                 UpdateChecker.showDialog(this@MainActivity, release)
             }
         }
 
         setContentView(R.layout.activity_main)
+        handleVpnConsentRequest()
 
         if (sharedPreferences.getBoolean(KEY_APP_MONITOR_ENABLED, false) ||
             sharedPreferences.getBoolean(KEY_AUTO_FIREWALL_NEW_APPS, false) ||
@@ -399,6 +428,7 @@ class MainActivity : BaseActivity() {
         val profileButton: View? = findViewById(R.id.profileButton)
         profileButton?.setOnClickListener { showProfilesSheet() }
         updateProfileButtonIcon()
+        updateProfileButtonVisibility()
         com.arslan.shizuwall.profiles.ProfileTileSlots.refreshTiles(this)
 
         val sortButton: View? = findViewById(R.id.sortButton)
@@ -569,7 +599,9 @@ class MainActivity : BaseActivity() {
 
         reconcileActiveProfile()
         updateProfileButtonIcon()
+        updateProfileButtonVisibility()
         refreshBackendBanner()
+        healVpnBackendState()
 
         if (!isFirewallProcessRunning) {
             isFirewallEnabled = loadFirewallEnabled()
@@ -683,30 +715,7 @@ class MainActivity : BaseActivity() {
             SHIZUKU_PERMISSION_REQUEST_CODE -> {
                 if (granted) {
                     Toast.makeText(this, getString(R.string.shizuku_permission_granted), Toast.LENGTH_SHORT).show()
-                    if (pendingToggleEnable) {
-                        pendingToggleEnable = false
-                        val selectedAppPkgs = pendingEnableSelectedApps ?: appList.filter { it.isSelected }.map { it.key }
-                        val selectedApps = appList.filter { selectedAppPkgs.contains(it.packageName) }
-                        pendingEnableSelectedApps = null
-                        if (selectedApps.isNotEmpty()) {
-                            setToggleChecked(true)
-                            val allowPkgs = getWhitelistAllowPackages(selectedAppPkgs)
-                            showFirewallConfirmDialog(selectedApps, selectedAppPkgs, allowPkgs)
-                        } else {
-                            setToggleChecked(false)
-                        }
-                    } else if (pendingToggleDisable) {
-                        pendingToggleDisable = false
-                        val pkgs = pendingDisableActivePackages ?: activeFirewallPackages.toList()
-                        pendingDisableActivePackages = null
-                        applyFirewallState(false, pkgs)
-                    }
-                    else if (pendingAutoEnable) {
-                        pendingAutoEnable = false
-                        val pkgs = pendingAutoEnableSelectedApps ?: appList.filter { it.isSelected }.map { it.key }
-                        pendingAutoEnableSelectedApps = null
-                        autoEnableOnShizukuStart(pkgs)
-                    }
+                    resumeAfterBackendPermissionGranted()
                 } else {
                     pendingToggleEnable = false
                     pendingToggleDisable = false
@@ -727,6 +736,32 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun resumeAfterBackendPermissionGranted() {
+        if (pendingToggleEnable) {
+            pendingToggleEnable = false
+            val selectedAppPkgs = pendingEnableSelectedApps ?: appList.filter { it.isSelected }.map { it.key }
+            val selectedApps = appList.filter { selectedAppPkgs.contains(it.packageName) }
+            pendingEnableSelectedApps = null
+            if (selectedApps.isNotEmpty()) {
+                setToggleChecked(true)
+                val allowPkgs = getWhitelistAllowPackages(selectedAppPkgs)
+                showFirewallConfirmDialog(selectedApps, selectedAppPkgs, allowPkgs)
+            } else {
+                setToggleChecked(false)
+            }
+        } else if (pendingToggleDisable) {
+            pendingToggleDisable = false
+            val pkgs = pendingDisableActivePackages ?: activeFirewallPackages.toList()
+            pendingDisableActivePackages = null
+            applyFirewallState(false, pkgs)
+        } else if (pendingAutoEnable) {
+            pendingAutoEnable = false
+            val pkgs = pendingAutoEnableSelectedApps ?: appList.filter { it.isSelected }.map { it.key }
+            pendingAutoEnableSelectedApps = null
+            autoEnableOnShizukuStart(pkgs)
+        }
+    }
+
     private fun checkPermission(code: Int): Boolean {
         val workingMode = sharedPreferences.getString(KEY_WORKING_MODE, "SHIZUKU") ?: "SHIZUKU"
         if (workingMode == WorkingMode.ROOT.name) {
@@ -742,6 +777,13 @@ class MainActivity : BaseActivity() {
         }
 
         if (workingMode == WorkingMode.LADB.name) return showLadbDaemonDialog {}
+
+        if (workingMode == WorkingMode.VPN.name) {
+            val consentIntent = VpnFirewallController.consentIntent(this)
+            if (consentIntent == null) return true
+            vpnConsentLauncher.launch(consentIntent)
+            return false
+        }
 
         try {
             if (!Shizuku.pingBinder()) {
@@ -922,7 +964,7 @@ class MainActivity : BaseActivity() {
             onAppIconClick = { appInfo ->
                 AppInfoDialog.show(this, this, appInfo.packageName, appInfo.appName, appInfo.userId)
             },
-            onAppSwitchLongClick = { showBlockModeDialog(it) }
+            onAppSwitchLongClick = { if (currentWorkingMode() != WorkingMode.VPN) showBlockModeDialog(it) }
         )
         appListAdapter.setMode(firewallMode)
         recyclerView.adapter = appListAdapter
@@ -1006,6 +1048,10 @@ class MainActivity : BaseActivity() {
 
     private fun showBlockModeDialog(appInfo: AppInfo) {
         if (!PerUidFirewall.supportsMobileOnly()) return
+        if (currentWorkingMode() == WorkingMode.VPN) {
+            Toast.makeText(this, getString(R.string.vpn_mobile_only_unsupported), Toast.LENGTH_SHORT).show()
+            return
+        }
         val sheetView = LayoutInflater.from(this).inflate(R.layout.sheet_block_mode, null)
         val sheet = InlineBottomSheet(this, sheetView)
         val iconView = sheetView.findViewById<ImageView>(R.id.blockModeAppIcon)
@@ -1132,8 +1178,14 @@ class MainActivity : BaseActivity() {
         }
 
         checkboxShowSystem.isChecked = showSystemApps
-        
-        checkboxShowOtherProfiles.isChecked = showOtherProfiles
+
+        val vpnWorkingMode = currentWorkingMode() == WorkingMode.VPN
+        if (vpnWorkingMode) {
+            checkboxShowOtherProfiles.isChecked = false
+            checkboxShowOtherProfiles.visibility = View.GONE
+        } else {
+            checkboxShowOtherProfiles.isChecked = showOtherProfiles
+        }
 
         checkboxShowOtherProfiles.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked && showOtherProfiles && appList.any { it.userId != 0 && it.isSelected }) {
@@ -1441,6 +1493,7 @@ class MainActivity : BaseActivity() {
             WorkingMode.SHIZUKU -> R.drawable.ic_shizuku
             WorkingMode.LADB -> R.drawable.adb_24px
             WorkingMode.ROOT -> R.drawable.hashtag_24px
+            WorkingMode.VPN -> R.drawable.ic_picon_vpn_key
         }
         firewallToggle.setThumbIconResource(iconRes)
     }
@@ -1529,14 +1582,20 @@ class MainActivity : BaseActivity() {
                 { recyclerView.getChildAt(0)?.findViewById(R.id.appSwitch) },
                 getString(R.string.block_mode_tour_title),
                 getString(R.string.block_mode_tour_message)
-            ).takeIf { PerUidFirewall.supportsMobileOnly() },
+            ).takeIf { PerUidFirewall.supportsMobileOnly() && currentWorkingMode() != WorkingMode.VPN },
             CoachMarks.Step({ recyclerView.getChildAt(0) }, getString(R.string.favorites_title), getString(R.string.favorites_message)),
-            CoachMarks.Step({ findViewById(R.id.sortButton) }, getString(R.string.sorting_onboarding_title), getString(R.string.sorting_onboarding_message)),
-            CoachMarks.Step({ findViewById(R.id.profileButton) }, getString(R.string.profiles), getString(R.string.profiles_subtitle)),
+            CoachMarks.Step(
+                { findViewById(R.id.sortButton) },
+                getString(R.string.sorting_onboarding_title),
+                getString(if (currentWorkingMode() == WorkingMode.VPN) R.string.onboarding_tour_sorting_vpn_message else R.string.sorting_onboarding_message)
+            ),
+            CoachMarks.Step({ findViewById(R.id.profileButton) }, getString(R.string.profiles), getString(R.string.profiles_subtitle))
+                .takeIf { currentWorkingMode() != WorkingMode.VPN },
             CoachMarks.Step(
                 { findViewById(R.id.settingsButton) },
                 getString(R.string.settings_title),
-                getString(R.string.settings_category_backend_title) + "\n" + getString(R.string.settings_category_firewall_title),
+                if (currentWorkingMode() == WorkingMode.VPN) getString(R.string.onboarding_tour_settings_vpn_message)
+                else getString(R.string.settings_category_backend_title) + "\n" + getString(R.string.settings_category_firewall_title),
                 onTarget = {
                     val intent = Intent(this, SettingsActivity::class.java).putExtra(CoachMarks.EXTRA_TOUR, true)
                     settingsLauncher.launch(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this, it, SettingsActivity.TRANSITION_NAME))
@@ -2045,6 +2104,7 @@ class MainActivity : BaseActivity() {
                 when (mode) {
                     WorkingMode.LADB -> R.string.backend_banner_message_ladb
                     WorkingMode.ROOT -> R.string.backend_banner_message_root
+                    WorkingMode.VPN -> R.string.vpn_backend_banner_message
                     else -> R.string.backend_banner_message_shizuku
                 }
             )
@@ -2058,9 +2118,19 @@ class MainActivity : BaseActivity() {
         WorkingMode.fromName(sharedPreferences.getString(KEY_WORKING_MODE, WorkingMode.SHIZUKU.name))
 
     private fun openBackendSetup() {
+        val consentIntent = if (currentWorkingMode() == WorkingMode.VPN) {
+            VpnFirewallController.consentIntent(this)
+        } else {
+            null
+        }
+        if (consentIntent != null) {
+            vpnConsentLauncher.launch(consentIntent)
+            return
+        }
         val intent = when (currentWorkingMode()) {
             WorkingMode.LADB -> Intent(this, com.arslan.shizuwall.LadbSetupActivity::class.java)
             WorkingMode.ROOT -> Intent(this, BackendSettingsActivity::class.java)
+            WorkingMode.VPN -> Intent(this, BackendSettingsActivity::class.java)
             else -> Intent(this, ShizukuSetupActivity::class.java)
         }
         try { startActivity(intent) } catch (_: Exception) { }
@@ -2842,6 +2912,40 @@ class MainActivity : BaseActivity() {
             if (active == null) R.drawable.ic_profiles_24px
             else com.arslan.shizuwall.profiles.ProfileIcons.resFor(active.icon)
         )
+    }
+
+    private fun updateProfileButtonVisibility() {
+        val button = findViewById<View>(R.id.profileButton) ?: return
+        button.visibility = if (currentWorkingMode() == WorkingMode.VPN) View.GONE else View.VISIBLE
+    }
+
+    /** Restores the VPN tunnel after a process restart, or clears the stale enabled state. */
+    private fun healVpnBackendState() {
+        if (isFirewallProcessRunning) return
+        if (currentWorkingMode() != WorkingMode.VPN) return
+        lifecycleScope.launch {
+            val state = withContext(Dispatchers.IO) {
+                runCatching {
+                    com.arslan.shizuwall.firewall.VpnFirewallController.reconcile(this@MainActivity, sharedPreferences)
+                }.getOrDefault(loadFirewallEnabled())
+            }
+            if (state == isFirewallEnabled) return@launch
+            isFirewallEnabled = state
+            activeFirewallPackages.clear()
+            if (state) activeFirewallPackages.addAll(loadActivePackages())
+            setToggleChecked(state)
+            applyListInteractionState()
+            updateInteractiveViews()
+        }
+    }
+
+    private fun handleVpnConsentRequest() {
+        if (intent?.getBooleanExtra(EXTRA_REQUEST_VPN_CONSENT, false) != true) return
+        intent.removeExtra(EXTRA_REQUEST_VPN_CONSENT)
+        if (currentWorkingMode() != WorkingMode.VPN) return
+        com.arslan.shizuwall.firewall.VpnFirewallController.consentIntent(this)?.let {
+            vpnConsentLauncher.launch(it)
+        }
     }
 
     private fun showProfilesSheet() {

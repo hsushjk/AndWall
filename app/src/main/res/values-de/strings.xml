@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ShizuWall</string>
+    <string name="app_name">AndWall</string>
     <string name="settings_category_appearance_title">Erscheinungsbild</string>
     <string name="settings_category_appearance_desc">Design, Farben, Schriftart, Sprache</string>
     <string name="settings_category_firewall_title">Firewall-Verhalten</string>
     <string name="settings_category_firewall_desc">Modi, Bestätigungen, Fehlerbehandlung</string>
     <string name="settings_category_backend_title">Backend &amp; Arbeitsmodus</string>
-    <string name="settings_category_backend_desc">Shizuku, LADB, Root</string>
+    <string name="settings_category_backend_desc">VPN, Root, Shizuku, LADB</string>
     <string name="settings_category_notifications_title">Benachrichtigungen &amp; schwebender Button</string>
     <string name="settings_category_notifications_desc">Überwachung, Warnungen, Overlay-Button</string>
-    <string name="github_url">https://github.com/ahmetcanarslan/shizuwall</string>
-    <string name="buymeacoffee_url">https://buymeacoffee.com/ahmetcanarslan</string>
-    <string name="donate">Spenden</string>
+    <string name="github_url">https://github.com/hsushjk/AndWall</string>
+    <string name="github_upstream_url" translatable="false">https://github.com/AhmetCanArslan/ShizuWall</string>
+    <string name="github_upstream">GitHub (Upstream)</string>
     <string name="show_system_apps">System-Apps anzeigen</string>
     <string name="show_system_apps_description">Android-System-Apps in der Liste anzeigen, damit sie ebenfalls blockiert werden können. Beim Deaktivieren werden ausgewählte System-Apps abgewählt.</string>
     <string name="app_visibility_change_disabled">Kann nicht geändert werden, während die Firewall aktiviert ist. Deaktivieren Sie zuerst die Firewall.</string>
@@ -28,7 +28,6 @@
     <string name="font_ndot">Ndot</string>
     <string name="select_all">Mehrere Apps auswählen</string>
     <string name="cat_favorites">Favoriten</string>
-    <string name="made_by">Mit ❤️ gemacht von Ahmet Can Arslan</string>
     <string name="reset_app_menu">App zurücksetzen</string>
     <string name="export_successful">Export erfolgreich</string>
     <string name="export_failed">Export fehlgeschlagen: %s</string>
@@ -42,10 +41,10 @@
     <string name="app_reset_complete">App-Zurücksetzung abgeschlossen. Schließt...</string>
     <string name="reset_app_failed">App-Zurücksetzung fehlgeschlagen: %s</string>
     <string name="android11_unsupported_title">Android 11-Kompatibilität</string>
-    <string name="android11_unsupported_message">Einige Geräte mit Android 11 unterstützen ShizuWall nicht. Wenn Sie einen Fehler wie sehen:\n - no command found set chain3 - \nbedeutet dies, dass Ihr Gerät nicht unterstützt wird und es derzeit nichts zu tun gibt.</string>
+    <string name="android11_unsupported_message">Einige Geräte mit Android 11 unterstützen AndWall nicht. Wenn Sie einen Fehler wie sehen:\n - no command found set chain3 - \nbedeutet dies, dass Ihr Gerät nicht unterstützt wird und es derzeit nichts zu tun gibt.</string>
     <string name="dont_show_again">Nicht erneut anzeigen</string>
     <string name="device_unsupported_title">Gerät nicht unterstützt</string>
-    <string name="device_unsupported_message">Ihr Android-Build stellt die Konnektivitäts-Firewall-Kette, auf die ShizuWall angewiesen ist, nicht bereit. Das ist unter Android 11–12 und bei einigen Hersteller-ROMs wie MIUI/HyperOS üblich. Das System lehnt den Befehl selbst ab, daher hilft ein Wechsel zwischen Shizuku, LADB und Root nicht.</string>
+    <string name="device_unsupported_message">Ihr Android-Build stellt die Konnektivitäts-Firewall-Kette, auf die AndWall angewiesen ist, nicht bereit. Das ist unter Android 11–12 und bei einigen Hersteller-ROMs wie MIUI/HyperOS üblich. Das System lehnt den Befehl selbst ab, daher hilft ein Wechsel zwischen Shizuku, LADB und Root nicht.</string>
     <string name="adb_broadcast_usage_title">ADB-Broadcast-Nutzung</string>
     <string name="adb_broadcast_field_action">Aktion</string>
     <string name="adb_broadcast_field_component">Komponente</string>
@@ -64,14 +63,14 @@
     <string name="adb_broadcast_dev_disable_framework">Firewall-Framework deaktivieren</string>
     <string name="adb_broadcast_extras_summary" formatted="false">%1$s (boolean): true = aktivieren, false = deaktivieren
 
-%2$s (string, optional): kommagetrennte Paketliste. Wenn weggelassen, verwendet die App die in ShizuWall gespeicherten ausgewählten Pakete.</string>
+%2$s (string, optional): kommagetrennte Paketliste. Wenn weggelassen, verwendet die App die in AndWall gespeicherten ausgewählten Pakete.</string>
     <string name="ok">OK</string>
     <string name="no_apps_selected">Keine Apps ausgewählt</string>
     <string name="shizuku_not_running">Shizuku läuft nicht</string>
     <string name="shizuku_permission_required">Shizuku-Berechtigung erforderlich</string>
     <string name="firewall">Firewall</string>
-    <string name="welcome_title">Willkommen bei ShizuWall</string>
-    <string name="welcome_message">Blockieren Sie unerwünschte Netzwerkverbindungen ohne Root oder VPN</string>
+    <string name="welcome_title">Willkommen bei AndWall</string>
+    <string name="welcome_message">Unterstützt die Modi VPN, Root, Shizuku und LADB</string>
     <string name="next">Weiter</string>
     <string name="grant_permission">Berechtigung erteilen</string>
     <string name="favorites_title">Favoriten</string>
@@ -81,7 +80,9 @@
     <string name="sorting_onboarding_title">Sortieren &amp; Filtern</string>
     <string name="sorting_onboarding_message">Tippen Sie auf das Sortiersymbol, um die Reihenfolge der Apps zu ändern. Dort können Sie auch auswählen, ob System-Apps und Profil-Apps angezeigt werden.</string>
     <string name="onboarding_mode_selection_title">Arbeitsmodus wählen</string>
-    <string name="onboarding_mode_selection_message">ShizuWall kann in drei Modi arbeiten. Shizuku wird für die meisten Benutzer empfohlen. Wenn Ihr Gerät Shizuku nicht unterstützt, können Sie den LADB- oder Root-Modus wählen. Der Arbeitsmodus kann später geändert werden.</string>
+    <string name="onboarding_mode_selection_message">AndWall arbeitet in vier Modi. VPN erfordert keine Einrichtung und wird für die meisten Nutzer empfohlen. Du kannst auch Root, Shizuku oder LADB wählen. Der Arbeitsmodus lässt sich später ändern.</string>
+    <string name="onboarding_tour_sorting_vpn_message">Tippe auf das Sortiersymbol, um die Reihenfolge der Apps zu ändern. Dort kannst du auch wählen, ob System-Apps angezeigt werden.</string>
+    <string name="onboarding_tour_settings_vpn_message">Arbeitsmodus: VPN\nFirewall-Modus: Whitelist. Ausgewählte Apps sind erlaubt, alle anderen werden blockiert.</string>
     <string name="get_started">Loslegen</string>
     <string name="shizuku_service_dead">Shizuku-Dienst ist tot</string>
     <string name="shizuku_update_required">Shizuku-Update erforderlich</string>
@@ -133,6 +134,20 @@
     <string name="working_mode_summary">Wählen Sie, wie Firewall-Befehle ausgeführt werden</string>
     <string name="working_mode_shizuku">Shizuku</string>
     <string name="working_mode_ladb">LADB</string>
+    <string name="working_mode_vpn">VPN</string>
+    <string name="working_mode_vpn_summary">Kein Root, Shizuku oder ADB erforderlich. AndWall erstellt ein lokales VPN, das nur die blockierten Apps erfasst, während alle anderen Apps ihre normale Verbindung behalten.</string>
+    <string name="vpn_permission_required">VPN-Berechtigung erforderlich</string>
+    <string name="vpn_permission_denied">Die VPN-Berechtigung wurde nicht erteilt, daher wurde die Firewall nicht aktiviert.</string>
+    <string name="vpn_backend_banner_message">Erteile die VPN-Berechtigung, um das VPN-Backend zu verwenden</string>
+    <string name="vpn_firewall_notification_channel_name">VPN-Firewall</string>
+    <string name="vpn_firewall_notification_channel_description">Hält die lokale VPN-Firewall am Laufen</string>
+    <string name="vpn_firewall_notification_title">VPN-Firewall aktiv</string>
+    <string name="vpn_firewall_notification_text">Netzwerkzugriff für %1$d App(s) wird blockiert</string>
+    <string name="vpn_firewall_session_name">AndWall VPN-Firewall</string>
+    <string name="vpn_work_profile_unsupported">Das VPN-Backend kann keine Apps im Arbeitsprofil blockieren</string>
+    <string name="vpn_mobile_only_unsupported">Das Blockieren nur mobiler Daten ist mit dem VPN-Backend nicht verfügbar</string>
+    <string name="vpn_mode_requires_static_app_list">Die Modi Smart Vordergrund, Hybrid und Fokus-Tracker sind mit dem VPN-Backend nicht verfügbar. Es wurde auf den Whitelist-Modus umgestellt.</string>
+    <string name="vpn_mode_backend_switch_firewall_disabled">Die Firewall wurde deaktiviert, weil das Backend geändert wurde</string>
     <string name="app_monitor_service">Benachrichtigungen für neue Apps</string>
     <string name="app_monitor_service_description">Benachrichtigung anzeigen, wenn eine neue App installiert wird</string>
     <string name="app_monitor_whitelist_dependency">Im Whitelist-Modus blockiert dieser Dienst auch neu installierte Apps. Wenn Benachrichtigungen für neue Apps, die automatische Blockierung neuer Apps und die Firewall-Statusbenachrichtigung alle aus sind, stoppt der Dienst und neue Apps bleiben erlaubt, bis die Firewall aus- und wieder eingeschaltet wird oder eine Automatisierungs-App die Installation per shizuwall.APP_INSTALLED-Broadcast meldet.</string>
@@ -195,7 +210,7 @@
     <string name="ladb_status_connected">Ladb mit Wireless-Debugging verbunden</string>
     <string name="ladb_status_disconnected">Getrennt</string>
     <string name="ladb_error_title">LADB-Fehler</string>
-    <string name="ladb_hint_connection_refused">Verbindung abgelehnt bedeutet normalerweise, dass Wireless-Debugging AUS ist oder Sie den falschen Port verwenden. Verwenden Sie den Port, der in den Entwickleroptionen → Wireless-Debugging → IP-Adresse &amp; Port angezeigt wird (nicht den Kopplungsport). Stellen auch sicher, dass ShizuWall im Wireless-Debugging zugelassen ist.</string>
+    <string name="ladb_hint_connection_refused">Verbindung abgelehnt bedeutet normalerweise, dass Wireless-Debugging AUS ist oder Sie den falschen Port verwenden. Verwenden Sie den Port, der in den Entwickleroptionen → Wireless-Debugging → IP-Adresse &amp; Port angezeigt wird (nicht den Kopplungsport). Stellen auch sicher, dass AndWall im Wireless-Debugging zugelassen ist.</string>
     <string name="ladb_pairing_channel_name">LADB-Kopplung</string>
     <string name="ladb_pairing_notification_title">Kopplungscode eingeben</string>
     <string name="ladb_pairing_notification_text">Tippen Sie und geben Sie den Kopplungsport und -code ein, die unter Wireless-Debugging → Gerät koppeln angezeigt werden.</string>
@@ -207,7 +222,7 @@
     <string name="ladb_pairing_result_success_title">LADB gekoppelt</string>
     <string name="ladb_pairing_result_success_text">Kopplung erfolgreich. Sie können sich jetzt verbinden.</string>
     <string name="ladb_pairing_result_failed_title">LADB-Kopplung fehlgeschlagen</string>
-    <string name="ladb_pairing_result_failed_text">Öffnen Sie ShizuWall, um das Fehlerprotokoll zu sehen.</string>
+    <string name="ladb_pairing_result_failed_text">Öffnen Sie AndWall, um das Fehlerprotokoll zu sehen.</string>
     <string name="ladb_pairing_result_missing_code">Kopplungscode fehlt. Geben Sie ihn unter Wireless-Debugging → Gerät koppeln ein.</string>
     <string name="ladb_pairing_result_missing_port">Kopplungsport fehlt. Eingeben: PORT CODE (von Wireless-Debugging → Gerät koppeln).</string>
     <string name="ladb_notification_permission_required">Die Benachrichtigungsberechtigung ist erforderlich, um die Kopplungscode-Aufforderung anzuzeigen.</string>
@@ -236,7 +251,7 @@
     <string name="failed_to_unblock_count">%d Apps konnten nicht entsperrt werden</string>
     <string name="failed_to_unblock_app">%s konnte nicht entsperrt werden</string>
     <string name="notification_permission_required_title">Benachrichtigungsberechtigung erforderlich</string>
-    <string name="notification_permission_required_message">ShizuWall benötigt die Benachrichtigungsberechtigung, um die Kopplungscode-Benachrichtigung anzuzeigen.\n\nOhne diese Berechtigung können Sie den Kopplungscode nicht einfach eingeben.</string>
+    <string name="notification_permission_required_message">AndWall benötigt die Benachrichtigungsberechtigung, um die Kopplungscode-Benachrichtigung anzuzeigen.\n\nOhne diese Berechtigung können Sie den Kopplungscode nicht einfach eingeben.</string>
     <string name="cannot_continue">Kann nicht fortfahren</string>
     <string name="notification_permission_required_ladb">Die Benachrichtigungsberechtigung ist erforderlich, um die LADB-Kopplungsfunktion zu nutzen. Diese Berechtigung ermöglicht es uns, wichtige Kopplungsinformationen anzuzeigen.\n\nBitte erteilen Sie die Benachrichtigungsberechtigung, um fortzufahren.</string>
     <string name="enter_pairing_code_hint">Geben Sie den Kopplungscode von der Wireless-Debugging-Seite in die Benachrichtigung ein.</string>
@@ -285,7 +300,7 @@
     <string name="firewall_mode_smart_foreground_description">Nur die aktuell im Vordergrund laufende App zulassen</string>
     
     <string name="firewall_mode_focus_tracker">Fokus-Tracker</string>
-    <string name="firewall_mode_focus_tracker_description">Die Firewall aktivieren, wenn ShizuWall nicht im Vordergrund ist, und deaktivieren, wenn es im Vordergrund ist.</string>
+    <string name="firewall_mode_focus_tracker_description">Die Firewall aktivieren, wenn AndWall nicht im Vordergrund ist, und deaktivieren, wenn es im Vordergrund ist.</string>
     <string name="smart_foreground_notification_channel_name">Smart Vordergrund (Dienst)</string>
     <string name="smart_foreground_notification_channel_description">Hintergrunddienst zur Überwachung der Vordergrund-App</string>
     <string name="smart_foreground_active">Smart Vordergrund Aktiv</string>
@@ -312,9 +327,9 @@
     <string name="firewall_mode_whitelist_details">Die Auswahl ist umgekehrt: Standardmäßig sind alle Apps blockiert und nur die ausgewählten Apps behalten Netzwerkzugriff. Beachte: Wenn „Systemapps anzeigen“ deaktiviert ist, werden Systemapps in diesem Modus nicht blockiert.</string>
     <string name="firewall_mode_screen_lock_details">Die ausgewählten Apps werden beim Sperren des Bildschirms blockiert und beim Entsperren wieder freigegeben. Du kannst eine Verzögerung einstellen, damit kurzes Ausschalten des Bildschirms keine Sperre auslöst. Ein Hintergrunddienst überwacht den Sperrstatus und läuft auch nach einem Neustart weiter.</string>
     <string name="firewall_mode_smart_foreground_details">Nur die App, die du gerade benutzt, behält Netzwerkzugriff. Alle anderen ausgewählten Apps bleiben blockiert, und der Zugriff wechselt, sobald du zu einer anderen App wechselst. Ein Hintergrunddienst prüft die Vordergrund-App etwa einmal pro Sekunde, muss also laufen und verbraucht etwas mehr Akku.</string>
-    <string name="firewall_mode_focus_tracker_details">Die Firewall folgt ShizuWall selbst: Wenn du ShizuWall verlässt oder minimierst, schaltet sich die Firewall ein; öffnest du es wieder, schaltet sie sich aus. Praktisch, wenn die Blockierung genau während des Einstellens pausieren soll.</string>
+    <string name="firewall_mode_focus_tracker_details">Die Firewall folgt AndWall selbst: Wenn du AndWall verlässt oder minimierst, schaltet sich die Firewall ein; öffnest du es wieder, schaltet sie sich aus. Praktisch, wenn die Blockierung genau während des Einstellens pausieren soll.</string>
     <string name="firewall_mode_hybrid_details">Jede App bekommt ihren eigenen Modus statt einer Regel für alle. Pro App wählst du Standard-Blockierung (immer blockiert), Smart-Vordergrund (nur während der Nutzung erlaubt) oder Bildschirmsperre (blockiert bei gesperrtem Bildschirm). Alle Regeln laufen gleichzeitig.</string>
-    <string name="firewall_mode_details_foreground_note">Smart-Vordergrund, Hybrid und Fokus-Tracker müssen die Vordergrund-App erkennen. Das geschieht über Shizuku oder über den Nutzungszugriff, den sich ShizuWall in den Modi LADB und Root selbst über die privilegierte Shell gewährt.</string>
+    <string name="firewall_mode_details_foreground_note">Smart-Vordergrund, Hybrid und Fokus-Tracker müssen die Vordergrund-App erkennen. Das geschieht über Shizuku oder über den Nutzungszugriff, den sich AndWall in den Modi LADB und Root selbst über die privilegierte Shell gewährt.</string>
     <string name="firewall_mode_hybrid">Hybrid-Modus</string>
     <string name="firewall_mode_hybrid_description">Modus für jede App einzeln konfigurieren</string>
     <string name="hybrid_mode_default_block">Standard-Blockierung</string>
@@ -325,6 +340,7 @@
     <string name="floating_button_notification_channel_name">Schwebende Schaltfläche (Dienst)</string>
     <string name="floating_button_notification_channel_description">Hintergrunddienst für die schwebende Firewall-Schaltfläche</string>
     <string name="notification_hold_to_disable">Zum Deaktivieren dieser Benachrichtigung gedrückt halten</string>
+    <string name="notification_body_with_hint" translatable="false">%1$s · %2$s</string>
     <string name="floating_button_notification_title">Schwebende Firewall-Schaltfläche</string>
     <string name="floating_button_content_description">Firewall umschalten</string>
     <string name="overlay_permission_required">Überlagerungsberechtigung ist für die schwebende Schaltfläche erforderlich</string>
@@ -332,7 +348,7 @@
     <string name="apply_root_rules_after_reboot">Firewall-Regeln nach dem Neustart anwenden</string>
     <string name="apply_root_rules_after_reboot_description">Die zuletzt aktiven Firewall-Regeln nach abgeschlossenem Start mit Root erneut anwenden</string>
     <string name="working_mode_root">Root (su)</string>
-    <string name="root_not_found_message">Root wurde nicht gefunden. Bitte erlauben Sie ShizuWall den Zugriff auf Root-Berechtigungen.</string>
+    <string name="root_not_found_message">Root wurde nicht gefunden. Bitte erlauben Sie AndWall den Zugriff auf Root-Berechtigungen.</string>
     <string name="double_tap_or_long_press">Doppeltippen, um mehrere Apps auszuwählen, lange drücken, um mehrere Apps abzuwählen</string>
     <string name="ladb_daemon_restart_required_title">LADB-Daemon neu starten</string>
     <string name="ladb_daemon_restart_required_message">Die Firewall konnte nicht aktiviert werden, weil die Autorisierung des LADB-Daemons fehlgeschlagen ist oder er nicht mehr reagiert. Öffnen Sie die LADB-Einrichtung, aktivieren Sie den erweiterten Modus und verwenden Sie dann Daemon beenden und Daemon starten.</string>
@@ -353,6 +369,7 @@
     <string name="firewall_mode_screen_lock">Bildschirmsperre-Modus</string>
     <string name="screen_lock_mode_notification_title">Bildschirmsperre-Modus</string>
     <string name="screen_lock_mode_operation_failed">Bildschirmsperre-Modus-Vorgang fehlgeschlagen</string>
+    <string name="screen_lock_no_secure_lock_warning">Dieses Gerät hat keine Bildschirmsperre. Der Bildschirmsperre-Modus funktioniert erst, nachdem du eine PIN, ein Muster oder ein Passwort festgelegt hast.</string>
     <string name="screen_lock_mode_notification_channel_description">Hintergrunddienst für Bildschirmsperren-Automatisierung</string>
     <string name="screen_lock_delay_dialog_title">Bildschirmsperren-Verzögerung</string>
 
@@ -428,7 +445,7 @@
     <string name="app_info_internet_no">Keine Internetberechtigung</string>
     <string name="app_info_mobile_only">Nur mobile Daten blockieren</string>
     <string name="app_info_wifi_only">Nur im WLAN blockieren</string>
-    <string name="app_info_wifi_only_summary">Nicht unterstützt. ShizuWall verwendet weder VPN noch Root-basierte Regeln, daher kann WLAN nicht einzeln blockiert werden.</string>
+    <string name="app_info_wifi_only_summary">Nicht unterstützt. AndWall verwendet weder VPN noch Root-basierte Regeln, daher kann WLAN nicht einzeln blockiert werden.</string>
     <string name="app_info_block_all">Alle Netzwerke blockieren</string>
     <string name="app_info_block_all_summary">WLAN und mobile Daten werden beide blockiert.</string>
     <string name="app_info_mobile_only_summary">WLAN bleibt erlaubt, während diese App blockiert ist. Nur getaktete Netzwerke werden blockiert: mobile Daten und als getaktet markierte WLANs, z. B. Hotspots.</string>
@@ -440,7 +457,7 @@
     <string name="app_info_trackers_none">Keine bekannten Tracker gefunden</string>
     <string name="app_info_trackers_count">%1$d Tracker gefunden</string>
     <string name="app_info_trackers_failed">Diese App konnte nicht geprüft werden</string>
-    <string name="app_info_trackers_note">Durch Analyse des App-Codes gefunden. ShizuWall nutzt kein VPN und untersucht keinen Datenverkehr. Diese Tracker sind abgeschnitten, solange die App blockiert ist.</string>
+    <string name="app_info_trackers_note">Durch Analyse des App-Codes gefunden. AndWall nutzt kein VPN und untersucht keinen Datenverkehr. Diese Tracker sind abgeschnitten, solange die App blockiert ist.</string>
     <string name="tracker_data_attribution">Tracker-Daten: Exodus Privacy, ODbL 1.0</string>
     <string name="show_other_profiles">Apps in anderen Profilen anzeigen</string>
     <string name="main_profile">Hauptprofil</string>
@@ -474,22 +491,22 @@
     <string name="remember_deleted_apps">Gelöschte Apps merken</string>
     <string name="remember_deleted_apps_description">Blockierstatus entfernter oder deaktivierter Apps behalten und bei ihrer Rückkehr wiederherstellen</string>
     <string name="foreground_detection_unavailable">Vordergrunderkennung nicht verfügbar</string>
-    <string name="foreground_detection_unavailable_message">ShizuWall konnte den privilegierten Helfer, der die App im Vordergrund meldet, nicht erreichen. Smart Foreground, Hybrid und Focus Tracker können daher keine Apps verwalten. Prüfe, ob dein Arbeitsmodus (Shizuku, LADB oder Root) eingerichtet ist und läuft.</string>
+    <string name="foreground_detection_unavailable_message">AndWall konnte den privilegierten Helfer, der die App im Vordergrund meldet, nicht erreichen. Smart Foreground, Hybrid und Focus Tracker können daher keine Apps verwalten. Prüfe, ob dein Arbeitsmodus (Shizuku, LADB oder Root) eingerichtet ist und läuft.</string>
     <string name="empty_app_list_title">Keine Apps vorhanden</string>
     <string name="empty_app_list_message">Es werden nur selbst installierte Apps aufgelistet. Aktiviere System-Apps, um alles auf diesem Gerät zu sehen.</string>
     <string name="empty_app_list_action">System-Apps anzeigen</string>
     <string name="empty_app_list_search_title">Keine Ergebnisse</string>
     <string name="empty_app_list_search_message">Keine App entspricht deiner Suche.</string>
     <string name="backend_banner_title">Einrichtung erforderlich</string>
-    <string name="backend_banner_message_shizuku">ShizuWall benötigt ein laufendes Shizuku und die erteilte Berechtigung, bevor Apps blockiert werden können.</string>
-    <string name="backend_banner_message_ladb">ShizuWall benötigt den laufenden lokalen ADB-Dienst, bevor Apps blockiert werden können. Koppele das Gerät über Drahtloses Debugging, um ihn zu starten.</string>
-    <string name="backend_banner_message_root">ShizuWall benötigt Root-Zugriff, bevor Apps blockiert werden können.</string>
+    <string name="backend_banner_message_shizuku">AndWall benötigt ein laufendes Shizuku und die erteilte Berechtigung, bevor Apps blockiert werden können.</string>
+    <string name="backend_banner_message_ladb">AndWall benötigt den laufenden lokalen ADB-Dienst, bevor Apps blockiert werden können. Koppele das Gerät über Drahtloses Debugging, um ihn zu starten.</string>
+    <string name="backend_banner_message_root">AndWall benötigt Root-Zugriff, bevor Apps blockiert werden können.</string>
     <string name="backend_banner_action">Einrichten</string>
     <string name="app_unsupported_system_uid">Diese App läuft unter einer System-UID (unter 10000). Android nimmt System-UIDs von App-Firewall-Regeln aus, daher kann sie nicht blockiert werden.</string>
     <string name="settings_category_security_title">Sicherheit</string>
     <string name="settings_category_security_desc">App-Sperre, PIN und Biometrie</string>
     <string name="app_lock_title">App-Sperre</string>
-    <string name="app_lock_description">PIN oder Biometrie zum Öffnen von ShizuWall verlangen</string>
+    <string name="app_lock_description">PIN oder Biometrie zum Öffnen von AndWall verlangen</string>
     <string name="app_lock_use_biometrics">Biometrie verwenden</string>
     <string name="app_lock_use_biometrics_description">Mit Fingerabdruck oder Gesicht entsperren statt PIN einzugeben</string>
     <string name="app_lock_change_pin">PIN ändern</string>
@@ -499,24 +516,25 @@
     <string name="app_lock_pin_mismatch">PINs stimmen nicht überein</string>
     <string name="app_lock_pin_length_required">%1$d Ziffern eingeben</string>
     <string name="app_lock_pin_length">PIN-Länge</string>
-    <string name="app_lock_pin_not_recoverable">Die PIN kann nicht wiederhergestellt werden. Wenn du sie vergisst, hilft nur das Löschen der App-Daten von ShizuWall – dabei gehen alle Einstellungen und Profile verloren.</string>
-    <string name="app_lock_scope_warning">Diese Sperre verhindert nur das Öffnen von ShizuWall. Die Firewall-Regeln liegen in Android und lassen sich weiterhin über Makro-Apps, ADB-Broadcasts, die Schnelleinstellungen-Kachel oder das Widget ändern.</string>
+    <string name="app_lock_pin_not_recoverable">Die PIN kann nicht wiederhergestellt werden. Wenn du sie vergisst, hilft nur das Löschen der App-Daten von AndWall – dabei gehen alle Einstellungen und Profile verloren.</string>
+    <string name="app_lock_scope_warning">Diese Sperre verhindert nur das Öffnen von AndWall. Die Firewall-Regeln liegen in Android und lassen sich weiterhin über Makro-Apps, ADB-Broadcasts, die Schnelleinstellungen-Kachel oder das Widget ändern.</string>
     <string name="app_lock_biometric_offer_title">Mit Biometrie entsperren?</string>
-    <string name="app_lock_biometric_offer_message">Wenn du das aktivierst, kann jeder, der dieses Gerät per Fingerabdruck oder Gesicht entsperrt, auch ShizuWall öffnen und die Firewall ändern. Lass es aus, wenn das Gerät geteilt wird und nur du die Firewall steuern sollst.</string>
+    <string name="app_lock_biometric_offer_message">Wenn du das aktivierst, kann jeder, der dieses Gerät per Fingerabdruck oder Gesicht entsperrt, auch AndWall öffnen und die Firewall ändern. Lass es aus, wenn das Gerät geteilt wird und nur du die Firewall steuern sollst.</string>
     <string name="app_lock_biometric_offer_enable">Biometrie verwenden</string>
     <string name="app_lock_biometric_offer_pin_only">Nur PIN</string>
     <string name="app_lock_wrong_pin">Falsche PIN</string>
     <string name="app_lock_locked_out">Zu viele Versuche. In %1$d s erneut versuchen</string>
-    <string name="app_lock_biometric_title">ShizuWall entsperren</string>
+    <string name="app_lock_biometric_title">AndWall entsperren</string>
     <string name="app_lock_use_pin">PIN verwenden</string>
     <string name="app_lock_pin_saved">PIN gespeichert</string>
     <string name="app_lock_delete">Löschen</string>
     <string name="app_lock_submit">Bestätigen</string>
-    <string name="contact_developer">Entwickler kontaktieren</string>
-    <string name="contact_developer_description">Feedback senden oder Problem melden</string>
-    <string name="contact_developer_no_app">Keine E-Mail-App gefunden</string>
+    <string name="contact_developer_url" translatable="false">https://github.com/hsushjk/AndWall/issues</string>
+    <string name="contact_developer">Problem melden</string>
+    <string name="contact_developer_description">Den AndWall-Issue-Tracker auf GitHub öffnen</string>
+    <string name="open_link_failed">Keine App zum Öffnen dieses Links verfügbar</string>
     <string name="changelog_title">Neu in %1$s</string>
-    <string name="changelog_message">• Update-Prüfung in den Einstellungen\n• Auswahl pro App im Hybridmodus korrigiert\n• Lücken in der Liste beim Umschalten der Ausblenden-Optionen behoben\n• Einstellungen neu gegliedert</string>
+    <string name="changelog_message">• VPN-Modus hinzugefügt</string>
     <string name="whats_new">Neuigkeiten</string>
     <string name="whats_new_description">Änderungen in dieser Version ansehen</string>
     <string name="dismiss">Schließen</string>
@@ -527,6 +545,8 @@
     <string name="update_download">Herunterladen</string>
     <string name="update_up_to_date">Du bist auf dem neuesten Stand</string>
     <string name="update_check_failed">Update-Suche fehlgeschlagen</string>
+  <string name="update_no_releases">Noch keine Releases veröffentlicht</string>
     <string name="update_skip_version">Diese Version überspringen</string>
     <string name="auto_check_updates">Nach Updates suchen</string>
 </resources>
+

@@ -41,6 +41,7 @@ object ForegroundTaskWatcher {
                 WorkingMode.ROOT -> RootForegroundWatchSession.start(
                     PerUidFirewall.extractHelperDex(context).absolutePath
                 ) { line -> dispatch(line, onTask) }
+                WorkingMode.VPN -> false
             }
         } catch (t: Throwable) {
             Log.w(TAG, "Foreground watch failed to start", t)
@@ -61,6 +62,7 @@ object ForegroundTaskWatcher {
                 reader = null
             }
             WorkingMode.ROOT -> RootForegroundWatchSession.stop()
+            WorkingMode.VPN -> Unit
             null -> Unit
         }
         shizukuListener = null

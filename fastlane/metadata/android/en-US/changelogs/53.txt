@@ -1,1 +1,0 @@
-New appearance options: hide apps with a shared system UID and apps without internet permission

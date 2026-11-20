@@ -12,11 +12,22 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
+import com.arslan.shizuwall.FirewallMode
 import com.arslan.shizuwall.R
 import com.arslan.shizuwall.WorkingMode
+import com.arslan.shizuwall.firewall.FirewallCommands
+import com.arslan.shizuwall.firewall.VpnFirewallController
 import com.arslan.shizuwall.shell.RootShellExecutor
+import com.arslan.shizuwall.shell.ShellExecutor
+import com.arslan.shizuwall.shell.ShellExecutorProvider
+import com.arslan.shizuwall.utils.FirewallUtils
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BackendSettingsActivity : BaseActivity() {
 
@@ -25,6 +36,7 @@ class BackendSettingsActivity : BaseActivity() {
 
     private lateinit var radioGroupWorkingMode: RadioGroup
     private lateinit var radioShizukuMode: RadioButton
+    private lateinit var radioVpnMode: RadioButton
     private lateinit var radioLadbMode: RadioButton
     private lateinit var radioRootMode: RadioButton
     private lateinit var cardSetLadb: com.google.android.material.card.MaterialCardView
@@ -37,6 +49,24 @@ class BackendSettingsActivity : BaseActivity() {
     private var autoEnablePreviousState: Boolean = false
     private var rootReapplyPreviousState: Boolean = false
     private var suppressWorkingModeListener = false
+    private var pendingVpnConsentMode: WorkingMode? = null
+
+    private val vpnConsentLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val requestedMode = pendingVpnConsentMode
+        pendingVpnConsentMode = null
+        if (requestedMode == null) return@registerForActivityResult
+        if (result.resultCode == RESULT_OK) {
+            applyWorkingMode(requestedMode)
+        } else {
+            Toast.makeText(this, getString(R.string.vpn_permission_denied), Toast.LENGTH_SHORT).show()
+            val currentMode = WorkingMode.fromName(
+                sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name)
+            )
+            checkRadioFor(currentMode)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +82,7 @@ class BackendSettingsActivity : BaseActivity() {
 
         radioGroupWorkingMode = findViewById(R.id.radioGroupWorkingMode)
         radioShizukuMode = findViewById(R.id.radioShizukuMode)
+        radioVpnMode = findViewById(R.id.radioVpnMode)
         radioLadbMode = findViewById(R.id.radioLadbMode)
         radioRootMode = findViewById(R.id.radioRootMode)
         cardSetLadb = findViewById(R.id.cardSetLadb)
@@ -80,11 +111,7 @@ class BackendSettingsActivity : BaseActivity() {
 
         val workingModeName = sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name)
         val workingMode = WorkingMode.fromName(workingModeName)
-        when (workingMode) {
-            WorkingMode.LADB -> radioGroupWorkingMode.check(R.id.radioLadbMode)
-            WorkingMode.ROOT -> radioGroupWorkingMode.check(R.id.radioRootMode)
-            else -> radioGroupWorkingMode.check(R.id.radioShizukuMode)
-        }
+        checkRadioFor(workingMode)
 
         updateWorkingModeDependentUi(workingMode, restoreAutoEnable = false)
     }
@@ -105,6 +132,7 @@ class BackendSettingsActivity : BaseActivity() {
 
             val currentMode = WorkingMode.fromName(sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name))
             val mode = when (checkedId) {
+                R.id.radioVpnMode -> WorkingMode.VPN
                 R.id.radioLadbMode -> WorkingMode.LADB
                 R.id.radioRootMode -> WorkingMode.ROOT
                 else -> WorkingMode.SHIZUKU
@@ -113,24 +141,20 @@ class BackendSettingsActivity : BaseActivity() {
 
             if (mode == WorkingMode.ROOT && !RootShellExecutor.hasRootAccess()) {
                 showRootNotFoundDialog()
-                suppressWorkingModeListener = true
-                when (currentMode) {
-                    WorkingMode.LADB -> radioGroupWorkingMode.check(R.id.radioLadbMode)
-                    WorkingMode.ROOT -> radioGroupWorkingMode.check(R.id.radioRootMode)
-                    else -> radioGroupWorkingMode.check(R.id.radioShizukuMode)
-                }
-                suppressWorkingModeListener = false
+                checkRadioFor(currentMode)
                 return@setOnCheckedChangeListener
             }
 
-            sharedPreferences.edit().putString(MainActivity.KEY_WORKING_MODE, mode.name).apply()
-            if (mode != WorkingMode.ROOT) {
-                com.arslan.shizuwall.shell.RootShellExecutor.shutdown()
+            if (mode == WorkingMode.VPN && !VpnFirewallController.hasConsent(this)) {
+                val consentIntent = VpnFirewallController.consentIntent(this)
+                if (consentIntent != null) {
+                    pendingVpnConsentMode = mode
+                    vpnConsentLauncher.launch(consentIntent)
+                    return@setOnCheckedChangeListener
+                }
             }
-            setResult(RESULT_OK)
 
-            TransitionManager.beginDelayedTransition(rootView, AutoTransition())
-            updateWorkingModeDependentUi(mode, restoreAutoEnable = true)
+            applyWorkingMode(mode)
         }
 
         layoutSetLadb.setOnClickListener {
@@ -147,6 +171,75 @@ class BackendSettingsActivity : BaseActivity() {
 
         makeCardClickableForSwitch(switchAutoEnableOnShizukuStart)
         makeCardClickableForSwitch(switchApplyRootRulesAfterReboot)
+    }
+
+    private fun checkRadioFor(mode: WorkingMode) {
+        suppressWorkingModeListener = true
+        when (mode) {
+            WorkingMode.VPN -> radioGroupWorkingMode.check(R.id.radioVpnMode)
+            WorkingMode.LADB -> radioGroupWorkingMode.check(R.id.radioLadbMode)
+            WorkingMode.ROOT -> radioGroupWorkingMode.check(R.id.radioRootMode)
+            else -> radioGroupWorkingMode.check(R.id.radioShizukuMode)
+        }
+        suppressWorkingModeListener = false
+    }
+
+    private fun applyWorkingMode(mode: WorkingMode) {
+        val currentMode = WorkingMode.fromName(
+            sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name)
+        )
+        if (mode == currentMode) {
+            checkRadioFor(mode)
+            return
+        }
+
+        val firewallEnabled = FirewallUtils.loadFirewallEnabled(sharedPreferences)
+        val previousExecutor: ShellExecutor? =
+            if (firewallEnabled) ShellExecutorProvider.forContext(this) else null
+
+        if (mode == WorkingMode.VPN) {
+            sharedPreferences.edit()
+                .putBoolean(MainActivity.KEY_SHOW_OTHER_PROFILES, false)
+                .putStringSet(MainActivity.KEY_MOBILE_ONLY_APPS, emptySet())
+                .apply()
+            val firewallMode = FirewallUtils.firewallMode(sharedPreferences)
+            if (firewallMode.requiresForegroundDetection()) {
+                sharedPreferences.edit()
+                    .putString(MainActivity.KEY_FIREWALL_MODE, FirewallMode.WHITELIST.name)
+                    .apply()
+                Toast.makeText(this, getString(R.string.vpn_mode_requires_static_app_list), Toast.LENGTH_LONG).show()
+            }
+        }
+        if (currentMode == WorkingMode.VPN && mode != WorkingMode.VPN) {
+            VpnFirewallController.disable(this)
+        }
+
+        sharedPreferences.edit().putString(MainActivity.KEY_WORKING_MODE, mode.name).apply()
+        if (mode != WorkingMode.ROOT) {
+            RootShellExecutor.shutdown()
+        }
+        setResult(RESULT_OK)
+
+        checkRadioFor(mode)
+        TransitionManager.beginDelayedTransition(rootView, AutoTransition())
+        updateWorkingModeDependentUi(mode, restoreAutoEnable = true)
+
+        if (firewallEnabled) {
+            Toast.makeText(this, getString(R.string.vpn_mode_backend_switch_firewall_disabled), Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    runCatching {
+                        previousExecutor?.exec(FirewallCommands.CHAIN3_ENABLE)
+                        val activePackages = FirewallUtils.loadActivePackages(sharedPreferences).toList()
+                        previousExecutor?.execBatch(FirewallCommands.unblockAll(activePackages))
+                        previousExecutor?.exec(FirewallCommands.CHAIN3_DISABLE)
+                    }
+                    FirewallUtils.saveFirewallEnabled(this@BackendSettingsActivity, sharedPreferences, false)
+                    FirewallUtils.saveActivePackages(sharedPreferences, emptySet())
+                }
+                setResult(RESULT_OK)
+            }
+        }
     }
 
     private fun showRootNotFoundDialog() {

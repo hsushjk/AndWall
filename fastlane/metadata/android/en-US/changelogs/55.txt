@@ -1,4 +1,1 @@
-Update check in settings
-Fixed hybrid mode per-app selection #170
-Fixed list gaps when toggling hide options
-Reorganized settings layout
+Added VPN mode

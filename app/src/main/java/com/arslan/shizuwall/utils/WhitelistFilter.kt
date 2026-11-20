@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import com.arslan.shizuwall.WorkingMode
+import com.arslan.shizuwall.ui.MainActivity
 
 object WhitelistFilter {
 
@@ -47,11 +49,18 @@ object WhitelistFilter {
             }
         }
 
-        val perProfileSelection = MultiUserApps.isEnabled(context)
-        for (app in MultiUserApps.cachedSnapshot(context).apps) {
-            if (!AppIds.isBlockable(app.uid)) continue
-            if (isSelected(selectedPkgs, app, perProfileSelection)) toAllow.add(app.key)
-            else toBlock.add(app.key)
+        // The per-user VPN never captures work profile apps.
+        val vpnBackend = WorkingMode.fromName(
+            context.getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE)
+                .getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name)
+        ) == WorkingMode.VPN
+        if (!vpnBackend) {
+            val perProfileSelection = MultiUserApps.isEnabled(context)
+            for (app in MultiUserApps.cachedSnapshot(context).apps) {
+                if (!AppIds.isBlockable(app.uid)) continue
+                if (isSelected(selectedPkgs, app, perProfileSelection)) toAllow.add(app.key)
+                else toBlock.add(app.key)
+            }
         }
 
         return WhitelistResult(toBlock, toAllow)

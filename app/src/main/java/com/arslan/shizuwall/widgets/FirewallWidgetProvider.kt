@@ -9,6 +9,8 @@ import android.widget.RemoteViews
 import android.widget.Toast
 import com.arslan.shizuwall.FirewallMode
 import com.arslan.shizuwall.R
+import com.arslan.shizuwall.WorkingMode
+import com.arslan.shizuwall.firewall.VpnFirewallController
 import com.arslan.shizuwall.receivers.FirewallControlReceiver
 import com.arslan.shizuwall.ui.MainActivity
 import com.arslan.shizuwall.utils.FirewallUtils
@@ -30,6 +32,20 @@ class FirewallWidgetProvider : AppWidgetProvider() {
         super.onReceive(context, intent)
         if (intent.action == ACTION_WIDGET_CLICK) {
             val sharedPreferences = context.getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE)
+            val workingMode = WorkingMode.fromName(
+                sharedPreferences.getString(MainActivity.KEY_WORKING_MODE, WorkingMode.SHIZUKU.name)
+            )
+            if (workingMode == WorkingMode.VPN && !VpnFirewallController.hasConsent(context)) {
+                runCatching {
+                    context.startActivity(
+                        Intent(context, MainActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            putExtra(MainActivity.EXTRA_REQUEST_VPN_CONSENT, true)
+                        }
+                    )
+                }
+                return
+            }
             val newState = !FirewallUtils.loadFirewallEnabled(sharedPreferences)
 
             if (!FirewallUtils.checkBackendReady(context)) {

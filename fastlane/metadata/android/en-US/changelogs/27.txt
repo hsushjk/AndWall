@@ -1,3 +1,0 @@
-Added floating action button for controlling firewall
-Added necessary instructions for accesibility service
-Added Czech translation
