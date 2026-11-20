@@ -1,10 +1,10 @@
 <div align="center">
   <a href="https://github.com/hsushjk/AndWall">
-    <img src="../app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="AndWall simgesi" width="72" />
+    <img src="../app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="AndWall Simgesi" width="72" />
   </a>
   <h1>AndWall</h1>
-  <strong>İsteğe bağlı yerel VPN arka ucu sunan Android güvenlik duvarı.</strong><br/>
-  Gizlilik öncelikli, tamamen yerel; kurulum gerektirmeyen yerleşik bir VPN arka ucuyla, gelişmiş modlarda ise Shizuku / yerel ADB arka plan servisi / Root ile çalışır.
+  <strong>Android güvenlik duvarı.</strong><br/>
+  VPN / Shizuku / yerel ADB arka plan programı / Root tabanlı
 </div>
 
 <p align="center">
@@ -23,47 +23,55 @@
 </p>
 <div style="height: 20px;">&nbsp;</div>
 <p align="center">
-  <a href="https://tooomm.github.io/github-release-stats/?username=hsushjk&repository=AndWall">
-    <img alt="İndirmeler (GitHub)" src="https://img.shields.io/github/downloads/hsushjk/AndWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
-  </a>
-  <img alt="Depo boyutu" src="https://img.shields.io/github/repo-size/hsushjk/AndWall?style=flat-square" />
-  <img alt="Minimum SDK" src="https://img.shields.io/badge/Minimum%20SDK-30%20(Android%2011)-839192?style=flat-square&logo=android&logoColor=white" />
+  <img alt="Minimum SDK sürümü" src="https://img.shields.io/badge/Minimum%20SDK-30%20(Android%2011)-839192?style=flat-square&logo=android&logoColor=white" />
 </p>
 
 <p align="center">
-  <a href="https://github.com/hsushjk/AndWall/issues">Sorular ve geri bildirim</a> ·
-  <a href="https://github.com/AhmetCanArslan/ShizuWall">Üst proje (ShizuWall)</a>
+  <a href="https://github.com/hsushjk/AndWall/issues">Sorunlar ve geri bildirim</a> ·
+  <a href="https://github.com/AhmetCanArslan/ShizuWall">Üst kaynak proje (ShizuWall)</a>
 </p>
 
-## Uyumlu ortamlar
+## AndWall neden var
 
-Android 11 ve üzeri ile aşağıdaki arka uçlardan biri gerekir:
+[ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) çok iyi bir proje: güçlü ama şişkin değil, arayüz tasarımı da güzel ve tutarlı. Ancak VPN modunu desteklemiyor.
 
-- **VPN**: yerleşik yerel VPN arka ucu; kurulum ve ek uygulama gerekmez (yalnızca geçerli kullanıcının uygulamaları)
-- **Shizuku** (fork sürümleri desteklenir)
-- **LibADB**: Kablosuz hata ayıklama üzerinden eşleşir, bilgisayar gerekmez
-- **Root**
-
-Yeni kurulumlarda varsayılan olarak **VPN** arka ucu ve **Beyaz Liste** güvenlik duvarı modu kullanılır, böylece uygulama kutudan çıktığı gibi çalışır. Diğer arka uçlar daha sonra **Ayarlar → Arka uç ve çalışma modu** bölümünden seçilebilir.
+Bu çatalın deposunun sahibi, iyi bir projenin kapsayıcı olması gerektiğini düşünüyor. VPN arka ucunun entegre edilmesi kullanım eşiğini düşürse de üst sınırı düşürmez.
 
 ## Neden AndWall
 
-- **VPN modunda ayrıcalıklı kurulum gerekmez**: yalnızca sistem VPN onayını bir kez vermeniz yeterli — Shizuku, ADB veya root gerekmez.
-- **Uygulama bazlı denetim**: ağı uygulama bazında engeller; zincir modlarında (chain-3) iş profili ve klon kopyaları da kapsanır.
-- **Gizlilik**: önce çevrimdışı; analiz yok, telemetri yok, uzak VPN sunucusu yok — tünel tamamen yereldir ve tüm paketler düşürülür.
-- **Hızlı erişim**: Hızlı Ayarlar kutucuğu, widget ve yüzen düğme.
-- **Otomasyon**: adb, Tasker, MacroDroid ve benzerlerinden gönderilen yayınlarla denetlenebilir.
+- **Birden fazla mod seçeneği**: En temel VPN kullanılabilir. Daha güçlü Shizuku, ADB ve root modları da kullanılabilir.
+- **Uygulama bazında kontrol**: Ağ erişimini uygulama bazında engelleyin; zincir modunda iş profilleri ve klon kopyalar da buna dahildir.
+- **Gizlilik**: Çevrimdışı öncelikli; analiz yok, telemetri yok, uzak VPN sunucusu yok — tünel tamamen yereldir ve tüm paketler atılır.
+- **Hızlı erişim**: Hızlı ayarlar döşemesi, widget'lar ve yüzen düğme.
+- **Otomasyon**: adb, Tasker, MacroDroid vb. tarafından gönderilen yayınlar aracılığıyla kontrol edilebilir.
 
-## Ekran görüntüsü
+## Bu çataldaki başlıca değişiklikler
+
+AndWall, [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) projesinin bir çatalıdır. Bu çatala eklenenler:
+
+- **VPN arka ucu**: Yapılandırma gerektirmeyen güvenlik duvarı arka ucu; kullanmak için yalnızca sistem yetkilendirme iletişim kutusunu onaylamak yeterlidir.
+- **VPN modu için arayüz uyarlaması**: VPN arka ucunun sunamadığı güvenlik duvarı modlarını ve özelliklerini gizler, güvenlik duvarı modunu beyaz listeye geri düşürür.
+- **Yeniden markalama, ayarların ve çevirilerin güncellenmesi**, ayrıca bu çatal için daha ayrıntılı sürüm notları ve güncelleme denetimi.
+- **Gizlilik politikasının kaldırılması**: Bu proje hiçbir uygulama mağazasında yayınlanmaz ve kişisel veri işlemez; bu nedenle herhangi bir bilgilendirme yükümlülüğü doğmaz.
+
+## Uyumlu ortam
+
+Android 11 ve üzeri sürümler; ayrıca aşağıdaki arka uçlardan biri gereklidir:
+
+- **VPN**
+- **Shizuku** (çatal sürümleri desteklenir)
+- **LibADB**: Bilgisayar gerektirmeden kablosuz hata ayıklama ile eşleştirme
+- **Root**
+
+## Ekran görüntüleri
 
 <p align="center">
-  <img src="../assets/screenshots/v4.7.1/1.png" alt="AndWall ana ekranı" width="30%" />
-  <img src="../assets/screenshots/v4.7.1/4.png" alt="Ayarlar" width="30%" />
+  <img src="../assets/screenshots/v4.7.1/1.png" alt="AndWall ana arayüzü" width="30%" />
 </p>
 
 ## Nasıl çalışır
 
-Yalnızca Shizuku, LibADB ve Root arka uçları ayrıcalıklı bir bileşene ihtiyaç duyar. Bu arka uçlar, ağ erişimini paket adı bazında denetleyen bir platform mekanizması olan Android connectivity'nin **chain 3** mekanizmasını kullanır:
+Yalnızca Shizuku, LibADB ve Root arka uçları ayrıcalıklı yardımcı bileşenlere ihtiyaç duyar. Bunlar Android connectivity'nin **chain 3** mekanizmasını kullanır; bu, ağ erişimini paket adına göre kontrol eden bir platform mekanizmasıdır:
 
 ```bash
 cmd connectivity set-chain3-enabled true                                # güvenlik duvarını aç
@@ -72,52 +80,42 @@ cmd connectivity set-package-networking-enabled true <package.name>    # engeli 
 cmd connectivity set-chain3-enabled false                               # güvenlik duvarını kapat
 ```
 
-Android bu kuralları cihaz yeniden başlatıldığında temizler.
+Android bu kuralları cihaz yeniden başlatıldıktan sonra temizler.
 
 ### VPN arka ucu
 
-VPN arka ucu, yalnızca engellemeyi seçtiğiniz uygulamaları yakalayan ve aldığı tüm paketleri düşüren yerel bir `VpnService` tun aygıtıdır. Tek bir sistem onay penceresi gerektirir, başka bir yapılandırma gerekmez. Yeni kurulumlarda varsayılan olarak **Beyaz Liste** güvenlik duvarı moduyla birlikte kullanılır (ağa izin verilen uygulamaları seçersiniz, geri kalan her şey engellenir) ve **Ayarlar → Arka uç ve çalışma modu** bölümünden değiştirilebilir.
+VPN arka ucu, yerel bir `VpnService` tun aygıtıdır; yalnızca engellemeyi seçtiğiniz uygulamaların trafiğini yakalar ve aldığı tüm paketleri atar. Yalnızca bir kez sistem yetkilendirme iletişim kutusu gerektirir, başka bir yapılandırma gerekmez. Yeni kurulumlar bu arka ucu **beyaz liste** güvenlik duvarı moduyla (ağ erişimine izin verilen uygulamaları seçin, geri kalan her şey engellenir) birlikte varsayılan olarak kullanır; bu ayar **Ayarlar → Arka uç ve çalışma modu** bölümünden değiştirilebilir.
 
-Tünel yeniden başlatmadan sonra otomatik olarak yeniden başlatılır; güvenlik duvarı açıkken uygulama süreci sonlandırılırsa, AndWall bir sonraki açılışında korumayı geri yükler. Cihazda ekran kilidi ayarlı olduğu sürece ekran kilidi modu desteklenir (tünel kilit durumunu izler).
+Yeniden başlatmadan sonra tünel otomatik olarak yeniden başlar; güvenlik duvarı açıkken uygulama süreci sonlandırılırsa AndWall bir sonraki açılışında korumayı geri yükler. Cihazda ekran kilidi tanımlı olduğu sürece kilit ekranı modu desteklenir (tünel kilit ekranı durumunu izler).
 
-VPN arka ucunun sınırlamaları: yalnızca geçerli kullanıcının uygulamalarını işler (iş profili/klon kopyaları desteklenmez), yalnızca mobil veri kuralları ve ön plan algılamasına dayalı modlar desteklenmez ve engellenen uygulama kümesinin bakımı UID bazlı güvenlik duvarı zincirlerine dayanmaz. Bu özellikler için Shizuku, LibADB veya Root kullanmaya devam edin.
-
-## Bu fork'taki değişiklikler
-
-AndWall, [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) projesinin bir fork'udur. Bu fork şunları ekler:
-
-- **VPN arka ucu**: kurulum gerektirmeyen, yalnızca sistem onay penceresini onaylayarak kullanılabilen güvenlik duvarı arka ucu.
-- **Yeni kullanıcı varsayılanları**: VPN arka ucu, Beyaz Liste güvenlik duvarı modu ve ağ erişim izni olmayan uygulamaların gizlenmesi.
-- **Güncellenmiş ilk kurulum akışı**: karşılama akışı ve mod seçimi artık dört arka ucun tamamından söz ediyor.
-- **VPN modu için arayüz uyarlaması**: VPN arka ucunun sunamadığı güvenlik duvarı modları ve özellikler gizlenir ve güvenlik duvarı modu Beyaz Liste'ye geri döner.
-- **Yeniden markalama, güncellenmiş ayar öğeleri ve çeviriler**, ayrıca bu fork için daha ayrıntılı değişiklik günlükleri ve güncelleme denetimleri.
+VPN arka ucunun sınırlamaları: yalnızca geçerli kullanıcının uygulamalarını işler (iş profilleri/klon kopyalar desteklenmez), yalnızca mobil veri kurallarını ve ön plan algılamasına dayalı modları desteklemez, ayrıca engellenen uygulama kümesinin bakımı UID bazlı güvenlik duvarı zincirine dayanmaz. Bu özelliklere ihtiyacınız varsa Shizuku, LibADB veya Root kullanmaya devam edin.
 
 ## Otomasyon
 
-Her yayın etkin bir arka uç gerektirir. `apps`, virgülle ayrılmış uygulama anahtarları listesidir: yalnızca paket adı yazmak 0. kullanıcıyı belirtir; `150:com.example.app` gibi önekli bir yazım ise o iş profilindeki veya klon alanındaki kopyayı belirtir.
+Her yayın, etkin durumda bir arka uç gerektirir. `apps` virgülle ayrılmış uygulama anahtarları listesidir: yalnızca paket adı yazmak kullanıcı 0 anlamına gelir, önek içerenler (ör. `150:com.example.app`) o iş profilindeki veya klon alanındaki kopyayı belirtir.
 
 ### Güvenlik duvarı: `shizuwall.CONTROL`
 
 | Parametre | Tür | |
 |---|---|---|
 | `state` | boolean, zorunlu | `true` = engelle, `false` = engeli kaldır |
-| `apps` | string, isteğe bağlı | Engellenecek veya engeli kaldırılacak uygulamalar. Atlanırsa yayın güvenlik duvarının tamamını açıp kapatır. |
+| `apps` | string, isteğe bağlı | Engellenecek veya engeli kaldırılacak uygulamalar. Atlanırsa yayın güvenlik duvarının tamamını açar veya kapatır. |
 
 ```bash
-# Güvenlik duvarını aç (state false kapatır)
+# güvenlik duvarını aç (state false kapatmak anlamına gelir)
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true
 
-# Bir uygulamayı ve iş profilindeki kopyasını engelle (state false engeli kaldırır)
+# bir uygulamayı ve iş profilindeki kopyasını engelle (state false engeli kaldırmak anlamına gelir)
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true --es apps "com.example.app,150:com.example.app"
 ```
 
-`apps` verildiğinde uygulama içindeki seçim de buna uyar: `state true` bu uygulamaları seçer ve güvenlik duvarı önceden kapalıysa açar; `state false` seçimi kaldırır ve güvenlik duvarını açık bırakır. Beyaz liste modunda `apps` izin verilenler listesini hedefler, bu nedenle iki durumun anlamı terstir.
+`apps` belirtildiğinde uygulama içindeki seçim de senkronize edilir: `state true` bu uygulamaları seçer ve güvenlik duvarı önceden kapalıysa onu açar; `state false` seçimi kaldırır ve güvenlik duvarını açık bırakır. Beyaz liste modunda `apps` izin verilen listeye işaret eder, bu nedenle bu iki durumun anlamı terstir.
 
 VPN modunda yayınlar aynı şekilde çalışır, ancak `apps` yalnızca geçerli kullanıcının uygulamalarına başvurmalıdır; iş profili anahtarları atlanır.
 
 ### Yeni uygulama: `shizuwall.APP_INSTALLED`
 
-Yeni yüklenen bir uygulamayı bildirir; böylece yeni uygulama ilkesi ve bildirimi, AndWall kurulumu kendisi algılamış gibi uygulanır. AndWall yalnızca kendi bulunduğu kullanıcı profilindeki kurulumları görebildiği için diğer profiller bu yolla kapsanır.
+Yeni yüklenen uygulamaları bildirir; böylece yeni uygulama ilkesi ve bildirimler, AndWall kurulumu kendisi algılamış gibi devreye girer. AndWall yalnızca kendi bulunduğu kullanıcı profilindeki kurulumları görebildiğinden, diğer profillerin bu yolla kapsanması gerekir.
 
 ```bash
 adb shell am broadcast -a shizuwall.APP_INSTALLED -n com.arslan.shizuwall/.receivers.AppInstalledReceiver --es apps "com.example.newapp"
@@ -127,15 +125,15 @@ Güvenlik duvarı kapalıyken hiçbir kural uygulanmaz. `INTERNET` izni olmayan 
 
 ### Profil: `shizuwall.PROFILE`
 
-Kaydedilmiş bir profili etkinleştirir: profilin uygulama seçimini, güvenlik duvarı modunu, uygulama bazlı modları ve *Sistem uygulamalarını göster* ayarını uygular.
+Kaydedilmiş bir profili etkinleştirir: o profilin uygulama seçimini, güvenlik duvarı modunu, uygulama bazında modları ve *sistem uygulamalarını göster* ayarını uygular.
 
 | Parametre | Tür | |
 |---|---|---|
-| `profile` | string | Profil adı, profil panelinde göründüğü şekilde. |
-| `profile_id` | string | Dahili kimlik; önce denetlenir ve yeniden adlandırmalardan etkilenmez. Profilin **Otomasyon** iletişim penceresinde hazır komut görüntülenir. |
-| `force_enable` | boolean, isteğe bağlı | Değiştirdikten sonra güvenlik duvarını, önceden kapalı olsa bile açar. |
+| `profile` | string | Profil adı; profil panelinde gösterilen adla aynıdır. |
+| `profile_id` | string | Dahili kimlik; önce kontrol edilir ve yeniden adlandırmadan etkilenmez. Bu profilin **Otomasyon** iletişim kutusunda hazır komutlar gösterilir. |
+| `force_enable` | boolean, isteğe bağlı | Etkinleştirildiğinde, güvenlik duvarı daha önce kapalı olsa bile onu açar. |
 
-`profile` veya `profile_id` değerlerinden en az biri gereklidir. İkisi de eşleşmezse hiçbir değişiklik yapılmaz ve bir toast ile bildirilir.
+`profile` ve `profile_id` değerlerinden en az biri sağlanmalıdır. İkisi de eşleşmezse hiçbir değişiklik yapılmaz ve bir toast bildirimi gösterilir.
 
 ```bash
 adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.ProfileControlReceiver --es profile "Work"
@@ -143,29 +141,33 @@ adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.P
 
 ## Kaynaktan derleme
 
-Proje, Gradle Wrapper ve Android SDK ile derlenir:
+Bu proje Gradle Wrapper ve Android SDK ile derlenir:
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-Hata ayıklama derlemesi `.debug` son ekini kullanır ve sürüm derlemesiyle birlikte kurulabilir. Sürüm derlemesi kendi imzalama yapılandırmanızı gerektirir.
+Hata ayıklama derlemeleri `.debug` sonekini kullanır ve sürüm derlemeleriyle aynı anda yüklenebilir. Sürüm derlemeleri kendi imzalama yapılandırmanızı gerektirir.
 
 ## Sorumluluk reddi
 
-AndWall **“olduğu gibi”** sunulur ve hiçbir garanti verilmez. Gelişmiş sistem izinlerine dayanır; geliştirici sistem kararsızlığı, veri kaybı veya ağ engellemenin yol açtığı yan etkilerden sorumlu değildir. Hangi uygulamaları engellediğinizi mutlaka doğrulayın.
+AndWall **“olduğu gibi”** sunulur ve hiçbir garanti verilmez. Üst düzey sistem izinlerine dayanır; geliştirici sistem kararsızlığı, veri kaybı veya ağ engellemesinin yol açtığı yan etkilerden sorumlu değildir. Hangi uygulamaları engellediğinizi mutlaka doğrulayın.
 
-Bu fork yalnızca [bu GitHub deposu](https://github.com/hsushjk/AndWall) üzerinden dağıtılır. Başka kaynaklardan gelen APK'lar bu projeyle ilgili değildir ve kullanım riski size aittir. AndWall'un resmi bir web sitesi yoktur ve Google Play veya F-Droid'de yayımlanmamıştır.
+Bu çatal yalnızca [bu GitHub deposu](https://github.com/hsushjk/AndWall) aracılığıyla dağıtılır. Başka kaynaklardan gelen APK'lar bu projeyle ilgili değildir; kullanım riski size aittir. AndWall'un resmî bir web sitesi yoktur ve Google Play veya F-Droid üzerinde yayınlanmaz.
 
-`INTERNET` izni yalnızca kablosuz hata ayıklama eşleştirmesi (LibADB) için istenir.
+`INTERNET` izni yalnızca kablosuz hata ayıklama eşleştirmesi (LibADB) için kullanılır.
+
+## Sponsorluk
+
+Bu projenin size yardımcı olduğunu düşünüyorsanız, bu depoya ve üst kaynak depoya birer Star verebilirsiniz. Sponsor olmak isterseniz, üst kaynak depoya gidip `Buy me a coffee` düğmesine tıklayın
 
 ## Lisans
 
-[GPLv3](../LICENSE.md). Paketlenen izleyici imza verileri ayrıca ODbL v1.0 ile lisanslanmıştır, bkz. [TRACKER_DATA_LICENSE.md](../TRACKER_DATA_LICENSE.md).
+[GPLv3](../LICENSE.md). Birlikte verilen izleyici imza verileri ayrı olarak ODbL v1.0 ile lisanslanmıştır; bkz. [TRACKER_DATA_LICENSE.md](../TRACKER_DATA_LICENSE.md).
 
-## Teşekkürler
+## Teşekkür
 
-- [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall): bu fork'un temel aldığı üst proje.
-- [Shizuku](https://github.com/RikkaApps/Shizuku): ayrıcalıklı komut yürütme.
-- [LibADB](https://github.com/MuntashirAkon/libadb-android): kablosuz hata ayıklama ve arka plan servisi bağlantısı.
-- [Exodus Privacy](https://exodus-privacy.eu.org/): izleyici imza veritabanı. AndWall kısaltılmış bir kopyayı içerir ve API'lerine hiçbir zaman bağlanmaz.
+- [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall): Bu çatalın dayandığı üst kaynak proje.
+- [Shizuku](https://github.com/RikkaApps/Shizuku): Ayrıcalıklı komut yürütme.
+- [LibADB](https://github.com/MuntashirAkon/libadb-android): Kablosuz hata ayıklama ve arka plan programı bağlantısı.
+- [Exodus Privacy](https://exodus-privacy.eu.org/): İzleyici imza veritabanı. AndWall, sadeleştirilmiş bir kopyayı içerir ve API'sine hiçbir zaman erişmez.

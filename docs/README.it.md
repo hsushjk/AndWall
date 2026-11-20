@@ -3,8 +3,8 @@
     <img src="../app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="Icona di AndWall" width="72" />
   </a>
   <h1>AndWall</h1>
-  <strong>Firewall per Android con backend VPN locale opzionale.</strong><br/>
-  Privacy al primo posto e funzionamento interamente locale, con un backend VPN integrato che non richiede alcuna configurazione — mentre le modalità avanzate usano Shizuku / il daemon ADB locale / Root.
+  <strong>Firewall per Android.</strong><br/>
+  Basato su VPN / Shizuku / demone ADB locale / Root
 </div>
 
 <p align="center">
@@ -23,47 +23,55 @@
 </p>
 <div style="height: 20px;">&nbsp;</div>
 <p align="center">
-  <a href="https://tooomm.github.io/github-release-stats/?username=hsushjk&repository=AndWall">
-    <img alt="Download (GitHub)" src="https://img.shields.io/github/downloads/hsushjk/AndWall/total?color=ff9500&label=Total%20Downloads%20(GitHub)&logo=github&logoColor=white&style=flat-square" />
-  </a>
-  <img alt="Dimensione del repository" src="https://img.shields.io/github/repo-size/hsushjk/AndWall?style=flat-square" />
   <img alt="SDK minimo" src="https://img.shields.io/badge/Minimum%20SDK-30%20(Android%2011)-839192?style=flat-square&logo=android&logoColor=white" />
 </p>
 
 <p align="center">
-  <a href="https://github.com/hsushjk/AndWall/issues">Domande e feedback</a> ·
+  <a href="https://github.com/hsushjk/AndWall/issues">Problemi e feedback</a> ·
   <a href="https://github.com/AhmetCanArslan/ShizuWall">Progetto upstream (ShizuWall)</a>
 </p>
 
-## Compatibilità
+## Perché esiste AndWall
+
+[ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) è un progetto eccellente: potente ma senza fronzoli, con un'interfaccia bella e ben congegnata. Non supporta però la modalità VPN.
+
+Il proprietario di questo fork ritiene che un buon progetto debba essere inclusivo. Integrare un backend VPN abbassa la soglia d'uso, ma non abbassa il livello massimo.
+
+## Perché scegliere AndWall
+
+- **Più modalità disponibili**: puoi usare la VPN, la più semplice. Oppure le modalità più potenti Shizuku, ADB e root.
+- **Controllo per app**: blocca la rete per singola app; in modalità concatenata include anche i profili di lavoro e i cloni delle app.
+- **Privacy**: offline-first, nessuna analisi, nessuna telemetria, nessun server VPN remoto: il tunnel è del tutto locale e tutti i pacchetti vengono scartati.
+- **Accesso rapido**: riquadro nelle impostazioni rapide, widget e pulsante flottante.
+- **Automazione**: controllabile tramite broadcast inviati da adb, Tasker, MacroDroid e altri.
+
+## Modifiche principali di questo fork
+
+AndWall è un fork di [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall). Questo fork aggiunge:
+
+- **Backend VPN**: un backend firewall senza configurazione, utilizzabile confermando la sola finestra di autorizzazione di sistema.
+- **Adattamento dell'interfaccia per la modalità VPN**: nasconde le modalità e le funzioni del firewall che il backend VPN non può offrire e riporta la modalità firewall alla whitelist.
+- **Rebranding, impostazioni e traduzioni aggiornate**, oltre a un changelog più dettagliato e al controllo degli aggiornamenti per questo fork.
+- **Rimozione dell'informativa sulla privacy**: il progetto non è pubblicato su alcun app store e non tratta dati personali, quindi non sorge alcun obbligo di informativa.
+
+## Ambienti compatibili
 
 Android 11 o successivo, con uno dei seguenti backend:
 
-- **VPN**: backend VPN locale integrato, senza configurazione e senza app companion (solo le app dell'utente corrente)
-- **Shizuku** (i fork sono supportati)
-- **LibADB**: si abbina tramite Debug wireless, senza computer
+- **VPN**
+- **Shizuku** (con supporto per la versione fork)
+- **LibADB**: associazione tramite debug wireless, senza computer
 - **Root**
-
-Le nuove installazioni partono con il backend **VPN** e la modalità firewall **Whitelist**, quindi l'app è pronta all'uso. Gli altri backend possono essere selezionati in seguito in **Impostazioni → Backend e modalità di funzionamento**.
-
-## Perché AndWall
-
-- **Nessuna configurazione privilegiata in modalità VPN**: basta concedere una sola volta il consenso VPN di sistema — niente Shizuku, niente ADB, niente root.
-- **Controllo per app**: blocca la rete app per app, comprese le copie nel profilo di lavoro e i cloni nelle modalità chain-3.
-- **Privacy**: offline-first, nessuna analisi, nessuna telemetria, nessun server VPN remoto — il tunnel è locale e tutti i pacchetti vengono scartati.
-- **Accesso rapido**: riquadro delle Impostazioni rapide, widget e pulsante flottante.
-- **Automazione**: controllabile tramite i broadcast inviati da adb, Tasker, MacroDroid e simili.
 
 ## Screenshot
 
 <p align="center">
   <img src="../assets/screenshots/v4.7.1/1.png" alt="Schermata principale di AndWall" width="30%" />
-  <img src="../assets/screenshots/v4.7.1/4.png" alt="Impostazioni" width="30%" />
 </p>
 
 ## Come funziona
 
-Solo i backend Shizuku, LibADB e Root richiedono un componente companion privilegiato. Essi agiscono sulla **chain 3** della connettività di Android, un meccanismo della piattaforma che controlla l'accesso alla rete per nome di pacchetto:
+Solo i backend Shizuku, LibADB e Root richiedono il componente companion privilegiato. Essi operano sulla **chain 3** della connettività Android, un meccanismo di piattaforma che controlla l'accesso alla rete per nome pacchetto:
 
 ```bash
 cmd connectivity set-chain3-enabled true                                # attiva il firewall
@@ -72,70 +80,60 @@ cmd connectivity set-package-networking-enabled true <package.name>    # sblocca
 cmd connectivity set-chain3-enabled false                               # disattiva il firewall
 ```
 
-Android cancella queste regole al riavvio.
+Android cancella queste regole al riavvio del dispositivo.
 
 ### Backend VPN
 
-Il backend VPN è un dispositivo tun locale basato su `VpnService` che intercetta solo le app che scegli di bloccare e scarta tutti i pacchetti che riceve. Richiede un'unica finestra di consenso di sistema e nessun'altra configurazione. Le nuove installazioni lo usano come backend predefinito, abbinato alla modalità firewall **Whitelist** (si scelgono le app a cui consentire la rete e tutto il resto viene bloccato); si può cambiare in **Impostazioni → Backend e modalità di funzionamento**.
+Il backend VPN è un dispositivo tun `VpnService` locale che intercetta solo le app che scegli di bloccare e scarta tutti i pacchetti che riceve. Richiede una sola finestra di autorizzazione di sistema e nessun'altra configurazione. Le nuove installazioni usano questo backend per impostazione predefinita, con la modalità firewall **whitelist** (scegli le app a cui consentire la rete, tutto il resto viene bloccato), modificabile in **Impostazioni → Backend e modalità operative**.
 
-Dopo un riavvio il tunnel si riavvia automaticamente; se il processo dell'app viene terminato mentre il firewall è attivo, la protezione viene ripristinata alla successiva apertura di AndWall. La modalità Blocco schermo è supportata (il tunnel segue lo stato di blocco dello schermo) purché il dispositivo abbia un blocco schermo impostato.
+Dopo un riavvio il tunnel si riavvia automaticamente; se il processo dell'app viene terminato mentre il firewall è attivo, la protezione viene ripristinata alla successiva apertura di AndWall. La modalità schermo bloccato è supportata purché il dispositivo abbia un blocco schermo (il tunnel segue lo stato di blocco).
 
-Limiti del backend VPN: gestisce solo le app dell'utente corrente (nessuna copia dei profili di lavoro o dei cloni), non supporta le regole per i soli dati mobili né le modalità basate sul rilevamento del primo piano, e la manutenzione dell'insieme delle app bloccate non si basa sulle catene firewall per UID. Per queste funzioni continua a usare Shizuku, LibADB o Root.
-
-## Modifiche in questo fork
-
-AndWall è un fork di [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall). Questo fork aggiunge:
-
-- **Backend VPN**: un backend firewall senza configurazione, disponibile subito dopo aver confermato la finestra di consenso di sistema.
-- **Impostazioni predefinite per i nuovi utenti**: backend VPN, modalità firewall Whitelist e occultamento delle app senza permesso di rete.
-- **Onboarding aggiornato**: il flusso di benvenuto e la selezione della modalità ora citano tutti e quattro i backend.
-- **Adattamento dell'interfaccia per la modalità VPN**: nasconde le modalità firewall e le funzioni che il backend VPN non può offrire e riporta la modalità firewall a Whitelist.
-- **Rebranding, voci delle impostazioni e traduzioni aggiornate**, oltre a changelog più dettagliati e a controlli degli aggiornamenti per questo fork.
+Limiti del backend VPN: gestisce solo le app dell'utente corrente (profili di lavoro e cloni non supportati), non supporta le regole valide solo per i dati mobili né le modalità basate sul rilevamento in primo piano, e la manutenzione dell'insieme delle app bloccate non si basa sulle catene firewall per UID. Se ti servono queste funzioni, continua a usare Shizuku, LibADB o Root.
 
 ## Automazione
 
-Ogni broadcast richiede un backend attivo. `apps` è un elenco di chiavi app separate da virgole: il solo nome del pacchetto indica l'utente 0, mentre una chiave con prefisso (ad esempio `150:com.example.app`) indica la copia in quel profilo di lavoro o spazio clone.
+Ogni broadcast richiede un backend attivo. `apps` è un elenco di chiavi app separate da virgola: il solo nome del pacchetto indica l'utente 0, mentre con un prefisso (ad es. `150:com.example.app`) indica la copia in quel profilo di lavoro o spazio clone.
 
 ### Firewall: `shizuwall.CONTROL`
 
 | Parametro | Tipo | |
 |---|---|---|
 | `state` | boolean, obbligatorio | `true` = blocca, `false` = sblocca |
-| `apps` | string, facoltativo | App da bloccare o sbloccare. Se omesso, il broadcast attiva o disattiva l'intero firewall. |
+| `apps` | string, facoltativo | Le app da bloccare o sbloccare. Se omesso, il broadcast attiva o disattiva l'intero firewall. |
 
 ```bash
-# Attiva il firewall (state false lo disattiva)
+# attiva il firewall (state false lo disattiva)
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true
 
-# Blocca un'app e la sua copia nel profilo di lavoro (state false le sblocca)
+# blocca un'app e le sue copie nel profilo di lavoro (state false sblocca)
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true --es apps "com.example.app,150:com.example.app"
 ```
 
-Con `apps` la selezione nell'app si allinea: `state true` seleziona le app e attiva il firewall se prima era disattivato, mentre `state false` le deseleziona e lascia il firewall attivo. In modalità Whitelist `apps` indica l'elenco delle app consentite, quindi i due stati hanno significato opposto.
+Con `apps` la selezione nell'app resta sincronizzata: `state true` seleziona queste app e attiva il firewall se prima era disattivato; `state false` le deseleziona e mantiene il firewall attivo. In modalità whitelist `apps` indica l'elenco delle app consentite, quindi il significato dei due stati è invertito.
 
-In modalità VPN i broadcast funzionano allo stesso modo, ma `apps` deve fare riferimento solo alle app dell'utente corrente; le chiavi dei profili di lavoro vengono ignorate.
+In modalità VPN i broadcast funzionano allo stesso modo, ma `apps` deve riferirsi solo alle app dell'utente corrente; le chiavi dei profili di lavoro vengono ignorate.
 
-### Nuova app: `shizuwall.APP_INSTALLED`
+### Nuove app: `shizuwall.APP_INSTALLED`
 
-Segnala un'app appena installata, così la policy per le nuove app e la notifica si applicano come se AndWall avesse rilevato l'installazione. AndWall vede solo le installazioni nel proprio profilo utente, quindi gli altri profili vanno coperti in questo modo.
+Segnala un'app appena installata, così che i criteri per le nuove app e le notifiche abbiano effetto come se AndWall avesse rilevato l'installazione da solo. AndWall vede solo le installazioni nel proprio profilo utente, quindi gli altri profili vanno coperti in questo modo.
 
 ```bash
 adb shell am broadcast -a shizuwall.APP_INSTALLED -n com.arslan.shizuwall/.receivers.AppInstalledReceiver --es apps "com.example.newapp"
 ```
 
-Nessuna regola viene applicata quando il firewall è disattivato. Le app senza il permesso `INTERNET` vengono ignorate.
+Con il firewall disattivato non viene applicata alcuna regola. Le app senza autorizzazione `INTERNET` vengono ignorate.
 
 ### Profilo: `shizuwall.PROFILE`
 
-Attiva un profilo salvato: applica la selezione di app del profilo, la modalità firewall, le modalità per app e l'impostazione *Mostra app di sistema*.
+Attiva un profilo salvato: applica la selezione di app, la modalità firewall, la modalità per singola app e l'impostazione *Mostra app di sistema* del profilo.
 
 | Parametro | Tipo | |
 |---|---|---|
-| `profile` | string | Nome del profilo, come mostrato nel pannello dei profili. |
-| `profile_id` | string | ID interno; viene controllato per primo e non è influenzato dalle rinomine. La finestra **Automazione** del profilo mostra il comando già pronto. |
-| `force_enable` | boolean, facoltativo | Attiva il firewall dopo il cambio anche se prima era disattivato. |
+| `profile` | string | Nome del profilo, uguale a quello mostrato nel pannello dei profili. |
+| `profile_id` | string | ID interno; viene controllato per primo e non è influenzato dalla rinomina. La finestra **Automazione** di quel profilo mostra il comando già pronto. |
+| `force_enable` | boolean, facoltativo | Attiva il firewall dopo il cambio, anche se prima era disattivato. |
 
-È necessario fornire almeno uno tra `profile` e `profile_id`. Se nessuno dei due corrisponde, non viene applicata alcuna modifica e un toast lo segnala.
+Indica almeno uno tra `profile` e `profile_id`. Se nessuno dei due corrisponde, non viene applicata alcuna modifica e compare un toast.
 
 ```bash
 adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.ProfileControlReceiver --es profile "Work"
@@ -143,29 +141,33 @@ adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.P
 
 ## Compilazione dai sorgenti
 
-Il progetto si compila con il Gradle Wrapper e l'Android SDK:
+Il progetto si compila con Gradle Wrapper e Android SDK:
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-La build di debug usa il suffisso `.debug` e può essere installata accanto alla build di release. La build di release richiede una propria configurazione di firma.
+Le build di debug usano il suffisso `.debug` e possono essere installate accanto alla versione di release. Le build di release richiedono la tua configurazione di firma.
 
-## Avvertenza
+## Esclusione di responsabilità
 
-AndWall è fornito **"così com'è"**, senza alcuna garanzia. Si basa su permessi di sistema avanzati e lo sviluppatore non è responsabile di instabilità del sistema, perdita di dati o effetti collaterali causati dal blocco della rete. Verifica sempre quali app stai bloccando.
+AndWall è fornito **“così com'è”**, senza alcuna garanzia. Si basa su permessi di sistema avanzati e gli sviluppatori non sono responsabili di instabilità del sistema, perdita di dati o effetti collaterali del blocco della rete. Verifica sempre quali app stai bloccando.
 
-Questo fork è distribuito solo tramite [questo repository GitHub](https://github.com/hsushjk/AndWall). Gli APK provenienti da altre fonti non sono affiliati a questo progetto e l'uso è a proprio rischio. AndWall non ha un sito web ufficiale e non è pubblicato su Google Play o F-Droid.
+Questo fork è distribuito esclusivamente tramite [questo repository GitHub](https://github.com/hsushjk/AndWall). Gli APK provenienti da altre fonti non sono correlati a questo progetto e l'uso è a tuo rischio. AndWall non ha un sito ufficiale e non viene pubblicato su Google Play né su F-Droid.
 
-Il permesso `INTERNET` serve solo per l'abbinamento tramite debug wireless (LibADB).
+L'autorizzazione `INTERNET` serve solo per l'associazione tramite debug wireless (LibADB).
+
+## Sponsor
+
+Se ritieni che questo progetto ti sia stato utile, puoi mettere una Star sia a questo repository sia a quello upstream. Se vuoi sponsorizzare, vai al repository upstream e fai clic su `Buy me a coffee`
 
 ## Licenza
 
-[GPLv3](../LICENSE.md). I dati delle firme dei tracker inclusi sono concessi separatamente con licenza ODbL v1.0, vedi [TRACKER_DATA_LICENSE.md](../TRACKER_DATA_LICENSE.md).
+[GPLv3](../LICENSE.md). I dati delle firme dei tracker inclusi sono concessi separatamente con licenza ODbL v1.0; vedi [TRACKER_DATA_LICENSE.md](../TRACKER_DATA_LICENSE.md).
 
-## Riconoscimenti
+## Ringraziamenti
 
 - [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall): il progetto upstream su cui si basa questo fork.
 - [Shizuku](https://github.com/RikkaApps/Shizuku): esecuzione di comandi privilegiati.
-- [LibADB](https://github.com/MuntashirAkon/libadb-android): debug wireless e connessione al daemon.
-- [Exodus Privacy](https://exodus-privacy.eu.org/): database delle firme dei tracker. AndWall ne include una copia ridotta e non contatta mai la sua API.
+- [LibADB](https://github.com/MuntashirAkon/libadb-android): debug wireless e connessione al demone.
+- [Exodus Privacy](https://exodus-privacy.eu.org/): database delle firme dei tracker. AndWall ne include una copia ridotta e non accede mai alla sua API.
