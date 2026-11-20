@@ -3,21 +3,22 @@
     <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" alt="AndWall Icon" width="72" />
   </a>
   <h1>AndWall</h1>
-  <strong>Android firewall with an optional local VPN backend.</strong><br/>
-  Privacy-first, local-only, powered by a built-in VPN backend that needs no setup — or by Shizuku / local ADB daemon / Root for the advanced modes.
+  <strong>可选本地 VPN 后端的 Android 防火墙。</strong><br/>
+  隐私优先、纯本地运行，由无需任何配置的内置 VPN 后端驱动——高级模式则使用 Shizuku / 本地 ADB 守护进程 / Root。
 </div>
 
 <p align="center">
-  <b>English</b> ·
+  <a href="docs/README.en.md">English</a> ·
   <a href="docs/README.tr.md">Türkçe</a> ·
   <a href="docs/README.de.md">Deutsch</a> ·
+  <a href="docs/README.es.md">Español</a> ·
   <a href="docs/README.it.md">Italiano</a> ·
   <a href="docs/README.pt.md">Português</a> ·
   <a href="docs/README.cs.md">Čeština</a> ·
   <a href="docs/README.ru.md">Русский</a> ·
   <a href="docs/README.ar.md">العربية</a> ·
   <a href="docs/README.hi.md">हिन्दी</a> ·
-  <a href="docs/README.zh.md">中文</a> ·
+  <b>中文</b> ·
   <a href="docs/README.ja.md">日本語</a>
 </p>
 <div style="height: 20px;">&nbsp;</div>
@@ -30,141 +31,141 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hsushjk/AndWall/issues">Questions &amp; issues</a> ·
-  <a href="https://github.com/AhmetCanArslan/ShizuWall">Upstream project (ShizuWall)</a>
+  <a href="https://github.com/hsushjk/AndWall/issues">问题与反馈</a> ·
+  <a href="https://github.com/AhmetCanArslan/ShizuWall">上游项目（ShizuWall）</a>
 </p>
 
-## Works with
+## 兼容环境
 
-Android 11+ and one of these backends:
+Android 11 及以上，并需要以下任一后端：
 
-- **VPN**: built-in local VPN backend, no setup and no companion app needed (current user's apps only)
-- **Shizuku** (forks are supported)
-- **LibADB**: pairs over Wireless Debugging, no computer needed
+- **VPN**：内置本地 VPN 后端，无需配置，也无需配套应用（仅限当前用户的应用）
+- **Shizuku**（支持分支版本）
+- **LibADB**：通过无线调试配对，无需电脑
 - **Root**
 
-New installs start with the **VPN** backend and **Whitelist** firewall mode, so the app works out of the box. The other backends can be selected later in **Settings → Backend & working mode**.
+新安装默认使用 **VPN** 后端和 **白名单** 防火墙模式，因此应用开箱即用。其他后端可稍后在 **设置 → 后端与工作模式** 中选择。
 
-## Why AndWall
+## 为什么选择 AndWall
 
-- **No privileged setup in VPN mode**: just grant the system VPN consent once — no Shizuku, no ADB, no root.
-- **Per-app control**: blocks networking per app, including work-profile and clone copies in chain-3 modes.
-- **Private**: offline-first, no analytics, no telemetry, no remote VPN server — the tunnel is local and all packets are dropped.
-- **Quick access**: Quick Settings tile, widget and floating button.
-- **Automation**: controllable through broadcasts from adb, Tasker, MacroDroid and similar.
+- **VPN 模式无需特权配置**：只需授权一次系统 VPN 即可——无需 Shizuku、无需 ADB、无需 root。
+- **按应用控制**：按应用拦截网络，在链式模式中还包括工作资料和分身副本。
+- **隐私**：离线优先，无分析、无遥测、无远程 VPN 服务器——隧道完全在本地，所有数据包都会被丢弃。
+- **快捷访问**：快速设置磁贴、小部件和悬浮按钮。
+- **自动化**：可通过 adb、Tasker、MacroDroid 等发送的广播进行控制。
 
-## Screenshot
+## 截图
 
 <p align="center">
-  <img src="assets/screenshots/v4.7.1/1.png" alt="AndWall main screen" width="30%" />
-  <img src="assets/screenshots/v4.7.1/4.png" alt="AndWall settings" width="30%" />
+  <img src="assets/screenshots/v4.7.1/1.png" alt="AndWall 主界面" width="30%" />
+  <img src="assets/screenshots/v4.7.1/4.png" alt="设置" width="30%" />
 </p>
 
-## How It Works
+## 工作原理
 
-Only the Shizuku, LibADB and Root backends need a privileged companion. They drive Android's connectivity **chain 3**, a platform mechanism that controls network access per package:
+只有 Shizuku、LibADB 和 Root 后端需要特权配套组件。它们会操作 Android connectivity 的 **chain 3**，这是一种按包名控制网络访问的平台机制：
 
 ```bash
-cmd connectivity set-chain3-enabled true                                # firewall on
-cmd connectivity set-package-networking-enabled false <package.name>   # block
-cmd connectivity set-package-networking-enabled true <package.name>    # unblock
-cmd connectivity set-chain3-enabled false                               # firewall off
+cmd connectivity set-chain3-enabled true                                # 开启防火墙
+cmd connectivity set-package-networking-enabled false <package.name>   # 拦截
+cmd connectivity set-package-networking-enabled true <package.name>    # 解除拦截
+cmd connectivity set-chain3-enabled false                               # 关闭防火墙
 ```
 
-Android clears these rules on reboot.
+Android 会在设备重启后清除这些规则。
 
-### VPN backend
+### VPN 后端
 
-The VPN backend is a local `VpnService` tun device that captures only the apps you choose to block and drops every packet it receives. It requires a single system consent dialog and no other setup. It is the default for new installs, paired with **Whitelist** firewall mode (pick the apps that are allowed, everything else is blocked), and can be changed in **Settings → Backend & working mode**.
+VPN 后端是一个本地 `VpnService` tun 设备，只捕获你选择要拦截的应用，并丢弃它收到的所有数据包。它只需要一次系统授权对话框，无需其他配置。新安装默认使用该后端，并搭配 **白名单** 防火墙模式（选择允许联网的应用，其余全部拦截），可在 **设置 → 后端与工作模式** 中更改。
 
-The tunnel is started again automatically after a reboot, and if the app process is stopped while the firewall is on, protection is restored the next time AndWall is opened. Screen Lock mode is supported (the tunnel follows the lock state) as long as the device has a screen lock.
+重启后隧道会自动重新启动；如果在防火墙开启期间应用进程被终止，下次打开 AndWall 时会恢复保护。只要设备设置了屏幕锁，就支持锁屏模式（隧道会跟随锁屏状态）。
 
-Limitations of the VPN backend: it only handles apps of the current user (no work-profile/clone copies), mobile-data-only rules and foreground-detection-based modes are not available, and the blocked-app set is maintained without per-uid firewall chains. For those features keep using Shizuku, LibADB or Root.
+VPN 后端的限制：它只处理当前用户的应用（不支持工作资料/分身副本），不支持仅移动数据规则和基于前台检测的模式，并且被拦截应用集合的维护不依赖按 UID 的防火墙链。如需这些功能，请继续使用 Shizuku、LibADB 或 Root。
 
-## Changes in this fork
+## 本分支的改动
 
-AndWall is a fork of [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall). This fork adds:
+AndWall 是 [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall) 的分支。本分支新增了：
 
-- **VPN backend**: a setup-free firewall backend that works right after the system consent dialog.
-- **New-user defaults**: VPN backend, Whitelist firewall mode and hiding apps without network access.
-- **Updated onboarding**: welcome flow and mode selection now mention all four backends.
-- **UI adaptation for VPN mode**: firewall modes and features that the VPN backend cannot provide are hidden, and the firewall mode falls back to Whitelist.
-- **Rebranding, updated settings entries and translations**, plus larger changelogs and update checks for this fork.
+- **VPN 后端**：免配置的防火墙后端，只需确认系统授权对话框即可使用。
+- **新用户默认设置**：VPN 后端、白名单防火墙模式，并隐藏无网络权限的应用。
+- **更新的引导流程**：欢迎流程和模式选择现在会提到全部四种后端。
+- **VPN 模式的界面适配**：隐藏 VPN 后端无法提供的防火墙模式和功能，并将防火墙模式回退为白名单。
+- **重新品牌化、更新设置项和翻译**，以及为本分支提供更详细的更新日志和更新检查。
 
-## Automation
+## 自动化
 
-Every broadcast needs an active backend. `apps` is a CSV list of app keys: a bare package name targets user 0, a prefixed one such as `150:com.example.app` targets the copy in that work profile or clone space.
+每条广播都需要一个处于活动状态的后端。`apps` 是以逗号分隔的应用键列表：仅写包名表示用户 0，带前缀的（如 `150:com.example.app`）表示该工作资料或分身空间中的副本。
 
-### Firewall: `shizuwall.CONTROL`
+### 防火墙：`shizuwall.CONTROL`
 
-| Extra | Type | |
+| 参数 | 类型 | |
 |---|---|---|
-| `state` | boolean, required | `true` = block, `false` = unblock |
-| `apps` | string, optional | Apps to block or unblock. Without it the broadcast toggles the whole firewall. |
+| `state` | boolean，必填 | `true` = 拦截，`false` = 解除拦截 |
+| `apps` | string，可选 | 要拦截或解除拦截的应用。省略时，广播会开关整个防火墙。 |
 
 ```bash
-# Firewall on (state false turns it off)
+# 开启防火墙（state false 表示关闭）
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true
 
-# Block an app and its work-profile copy (state false unblocks them)
+# 拦截某个应用及其工作资料中的副本（state false 表示解除拦截）
 adb shell am broadcast -a shizuwall.CONTROL -n com.arslan.shizuwall/.receivers.FirewallControlReceiver --ez state true --es apps "com.example.app,150:com.example.app"
 ```
 
-With `apps`, the selection in the app follows: `state true` selects the apps and turns the firewall on if it was off, `state false` unselects them and leaves the firewall on. In whitelist mode `apps` addresses the allow list, so the two states are reversed.
+带 `apps` 时，应用内的选择会同步：`state true` 会选中这些应用，并在防火墙原本关闭时将其开启；`state false` 会取消选中，并保持防火墙开启。在白名单模式下，`apps` 指向允许列表，因此这两种状态的含义相反。
 
-In VPN mode, broadcasts work the same way, but `apps` should reference apps of the current user only; work-profile keys are skipped.
+在 VPN 模式下，广播的工作方式相同，但 `apps` 应只引用当前用户的应用；工作资料的键会被跳过。
 
-### New app: `shizuwall.APP_INSTALLED`
+### 新应用：`shizuwall.APP_INSTALLED`
 
-Reports a newly installed app, so the new-app policy and notification apply to it as if AndWall had detected the install itself. AndWall only sees installs in its own profile, so this is how to cover the others.
+上报新安装的应用，使新应用策略和通知能像 AndWall 自己检测到安装一样生效。AndWall 只能看到自身所在用户资料中的安装，因此其他资料需要通过这种方式覆盖。
 
 ```bash
 adb shell am broadcast -a shizuwall.APP_INSTALLED -n com.arslan.shizuwall/.receivers.AppInstalledReceiver --es apps "com.example.newapp"
 ```
 
-No rule is applied while the firewall is off. Apps without the `INTERNET` permission are ignored.
+防火墙关闭时不会应用任何规则。没有 `INTERNET` 权限的应用会被忽略。
 
-### Profile: `shizuwall.PROFILE`
+### 配置文件：`shizuwall.PROFILE`
 
-Activates a saved profile: its app selection, firewall mode, per-app modes and *Show system apps* setting.
+激活已保存的配置文件：应用该配置文件的应用选择、防火墙模式、各应用模式和 *显示系统应用* 设置。
 
-| Extra | Type | |
+| 参数 | 类型 | |
 |---|---|---|
-| `profile` | string | Profile name, as shown in the profiles sheet. |
-| `profile_id` | string | Internal id; checked first and unaffected by renames. The profile's **Automation** dialog shows the ready-made command. |
-| `force_enable` | boolean, optional | Turn the firewall on after switching even if it was off. |
+| `profile` | string | 配置文件名称，与配置文件面板中显示的名称一致。 |
+| `profile_id` | string | 内部 ID；会优先检查，且不受重命名影响。该配置文件的**自动化**对话框中会显示现成的命令。 |
+| `force_enable` | boolean，可选 | 切换后开启防火墙，即使此前处于关闭状态。 |
 
-One of `profile` or `profile_id` is required. If neither matches, nothing changes and a toast reports it.
+`profile` 与 `profile_id` 至少提供一个。若两者都不匹配，则不会有任何更改，并通过 toast 提示。
 
 ```bash
 adb shell am broadcast -a shizuwall.PROFILE -n com.arslan.shizuwall/.receivers.ProfileControlReceiver --es profile "Work"
 ```
 
-## Build from source
+## 从源码构建
 
-The project builds with the Gradle wrapper and the Android SDK:
+本项目使用 Gradle Wrapper 和 Android SDK 构建：
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-The debug build uses the suffix `.debug` and can be installed alongside the release build. The release build requires a signing config of your own.
+调试构建使用 `.debug` 后缀，可与发布版本同时安装。发布构建需要你自己的签名配置。
 
-## Disclaimer
+## 免责声明
 
-AndWall is provided **"as is"**, without warranty. It relies on advanced system permissions, and the developer is not responsible for system instability, data loss or side effects of blocked networking. Always verify which apps you block.
+AndWall 按**“原样”**提供，不附带任何保证。它依赖高级系统权限，开发者不对系统不稳定、数据丢失或网络拦截造成的副作用负责。请务必确认你拦截了哪些应用。
 
-This fork is distributed only through [this GitHub repository](https://github.com/hsushjk/AndWall). APKs from anywhere else are unaffiliated and used at your own risk. AndWall has no official website and is not published on Google Play or F-Droid.
+本分支仅通过[此 GitHub 仓库](https://github.com/hsushjk/AndWall)分发。其他来源的 APK 与本项目无关，使用风险自负。AndWall 没有官方网站，也未在 Google Play 或 F-Droid 上发布。
 
-`INTERNET` is requested only for wireless debugging pairing (LibADB).
+`INTERNET` 权限仅用于无线调试配对（LibADB）。
 
-## License
+## 许可证
 
-[GPLv3](LICENSE.md). The bundled tracker signature data is licensed separately under ODbL v1.0, see [TRACKER_DATA_LICENSE.md](TRACKER_DATA_LICENSE.md).
+[GPLv3](LICENSE.md)。随附的追踪器签名数据单独以 ODbL v1.0 授权，参见 [TRACKER_DATA_LICENSE.md](TRACKER_DATA_LICENSE.md)。
 
-## Credits
+## 致谢
 
-- [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall): the upstream project this fork is based on.
-- [Shizuku](https://github.com/RikkaApps/Shizuku): privileged command execution.
-- [LibADB](https://github.com/MuntashirAkon/libadb-android): wireless debugging and daemon connection.
-- [Exodus Privacy](https://exodus-privacy.eu.org/): tracker signature database. AndWall bundles a trimmed copy and never contacts their API.
+- [ShizuWall](https://github.com/AhmetCanArslan/ShizuWall)：本分支所基于的上游项目。
+- [Shizuku](https://github.com/RikkaApps/Shizuku)：特权命令执行。
+- [LibADB](https://github.com/MuntashirAkon/libadb-android)：无线调试与守护进程连接。
+- [Exodus Privacy](https://exodus-privacy.eu.org/)：追踪器签名数据库。AndWall 内置了精简副本，且从不访问其 API。
